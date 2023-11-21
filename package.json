@@ -1,0 +1,20 @@
+{
+  "name": "proyecto_de_universidad",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "electron index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@electron/remote": "github:electron/remote",
+    "lodash": "^4.17.21"
+  },
+  "extraResources": [
+    "./node_modules/@electron/remote/**"
+  ]
+}
