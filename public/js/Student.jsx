@@ -1,5 +1,33 @@
 let remote = require("@electron/remote")
 
+let exitcode = 0;
+
+window.addEventListener("beforeunload", (evento) => {
+    //let res = preventDefaultClose();
+
+    
+    if (true) {
+        evento.preventDefault();
+        evento.returnValue = res; 
+        
+        return "";
+    };
+
+});
+
+
+function preventDefaultClose() {
+    let result = remote.dialog.showMessageBoxSync({
+        title: "Alerta de perdida de datos",
+        message: "Los datos no se han guardado, ¿deseas salir?",
+        buttons: ["Salir", "No Salir"]
+    })
+    
+    console.log(result)
+
+    return result
+}
+
 
 class App extends React.Component {
 
@@ -11,19 +39,16 @@ class App extends React.Component {
             <div className="marco">
                 <div className="header">
                     <div className="top1">
-                        <ControlButton img="/img/gui/add.svg">
-                            Agregar alumno
-                        </ControlButton>
-                        <ControlButton img="/img/gui/db.svg" click={() => {
-                            sessionStorage.setItem("path_db", "");
-                            document.location.href = "/init.html"
+                        <ControlButton img="/img/gui/add.svg" click={() => {
+                            
                         }}>
-                            Cambiar de plantilla
+                            Cerrar
                         </ControlButton>
-                        <ControlButton img="/img/gui/conf.svg" click={() => {
-                            openWin("/conf.html")
-                        }}>
-                            Configuraciones
+                        <ControlButton img="/img/gui/db.svg">
+                            Guardar
+                        </ControlButton>
+                        <ControlButton img="/img/gui/conf.svg">
+                            Eliminar estudiante
                         </ControlButton>
                         
                         

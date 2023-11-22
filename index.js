@@ -24,13 +24,13 @@ app.addListener("ready", () => {
         },
         width: 800,
         height: 800,
-        
+        minWidth: 1000
     });
 
     server.use("/", express.static("./public"));
     let PORT = 6686;
     server.listen(PORT, () => {
-        win.loadURL(`http://localhost:${PORT}/`);
+        win.loadURL(`http://localhost:${PORT}/init.html`);
         console.log("server open in the port: " +  PORT);
         require("@electron/remote/main").initialize()
 

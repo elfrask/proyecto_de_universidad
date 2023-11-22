@@ -2,7 +2,28 @@ let remote = require("@electron/remote")
 
 //process(remote.require("./remote_lib.js").getcwd())
 
+function openWin(url, args) {
+    let win = open(url, "", "");
 
+    win.args = args;
+    win.window.require = require;
+    win.window.reload = () => {
+        win.close();
+        openWin(url, args);
+    }
+    win.addEventListener("loadeddata", () => {
+        win.window.require = require;
+
+    })
+    win.onloadstart = () => {
+        win.window.require = require;
+
+    }
+
+    win.onclose = () => {
+        win = null;
+    }
+}
 
 let go = (id) => document.getElementById(id);
 let asi = (a, b) => Object.assign(a, b);
@@ -356,6 +377,32 @@ class Box extends React.Component { // style, className, img, click, size o (x, 
     }
 };
 
+class ControlButton extends React.Component { // style, className, img, click, size o (x, y)
+    render() {
+        return (
+            <div
+                className={"Controlbutton " + (this.props.className||"")}
+                style={asi({
+                    //backgroundImage:`url('${this.props.img}')`,
+                    width:this.props.size||this.props.x||"",
+                    height:this.props.size||this.props.y||"",
+                }, this.props.style)}
+                onClick={genlink(this.props.click)}
+            >
+                <div className="img" style={{
+                    backgroundImage:`url('${this.props.img}')`,
+
+                }}>
+
+                </div>
+                <div className="text">
+                    {this.props.children}
+                </div>
+            </div>
+        )
+    }
+};
+
 class TableHeaderDate extends React.Component {
 
     componentDidMount() {
@@ -385,16 +432,27 @@ class TableBodyDate extends React.Component {
 class TableBodyRowDate extends React.Component {
 
     render() {
-
+        
         return(
+            
             <div className="table-body-row-date" >
                 {
                     this.props.table_shows.map(x=> {
                         let data = this.props.data;
+                        let show = data[x];
+                        let estados = this.props.states
+
+
+                        if (estados!== undefined) {
+                            //console.log(x, estados)
+                            if (estados[x] !== undefined) {
+                                show = estados[x][show]||show;
+                            }
+                        }
 
                         return(
                             <TableBodyDate size={this.props.sizes[x]}>
-                                {data[x]}
+                                {show}
                             </TableBodyDate>
                         )
                     })
@@ -415,7 +473,10 @@ class Table extends React.Component {
 
         },
         x_scroll: 0,
-        table_visible: false
+        table_visible: false,
+        states: {
+
+        }
     }
 
     ordenar_por(id, invert) {
@@ -424,7 +485,23 @@ class Table extends React.Component {
 
     componentDidMount() {
         setTimeout(() => {
-            this.setState({sizes: tables[this.props.id], table_visible: true})
+            let st = this.props.states||{};
+            let list = Object.keys(st);
+
+            let out = {};
+
+            list.forEach(x=>{
+                let st_item = st[x]||[];
+
+                out[x] = {};
+
+                st_item.forEach(y=> {
+                    out[x][y.id] = y.caption
+                })
+            })
+
+            
+            this.setState({sizes: tables[this.props.id], table_visible: true, states:out})
         }, 100)
     }
 
@@ -467,7 +544,7 @@ class Table extends React.Component {
                                             data={x} 
                                             table_shows={table_dates} 
                                             sizes={this.state.sizes} 
-                                            
+                                            states={this.state.states}
                                         ></TableBodyRowDate>
                                     )
                                 })
@@ -481,7 +558,20 @@ class Table extends React.Component {
     }
 }
 
+class Dbcard extends React.Component {
+    render() {
 
+        return(
+            <div className="db-card" onClick={genlink(this.props.click)}>
+                <div className="db-card-img img" style={{backgroundImage:"url('/img/gui/db.svg')"}}>
+                </div>
+                <div className="db-card-title">
+                    {this.props.title}
+                </div>
+            </div>
+        )
+    }
+}
 
 function generate_code(long) {
     

@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@electron/remote": "github:electron/remote",
+    "express": "^4.18.2",
     "lodash": "^4.17.21"
   },
   "extraResources": [
