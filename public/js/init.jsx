@@ -36,6 +36,9 @@ class App extends React.Component {
                         <ControlButton img="/img/gui/net.svg">
                             Conectarse a una plantilla remota
                         </ControlButton>
+                        <ControlButton img="/img/gui/import.svg">
+                            Importar plantilla desde Zip
+                        </ControlButton>
                         
                         
                     </div>

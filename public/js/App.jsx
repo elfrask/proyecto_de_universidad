@@ -23,7 +23,7 @@ class App extends React.Component {
                         <ControlButton img="/img/gui/conf.svg" click={() => {
                             openWin("/conf.html")
                         }}>
-                            Configuraciones
+                            Configuraciones de la plantilla
                         </ControlButton>
                         
                         
