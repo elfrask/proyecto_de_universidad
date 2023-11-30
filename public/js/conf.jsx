@@ -17,7 +17,7 @@ window.addEventListener("beforeunload", (evento) => {
 
 let data = {
     sections:[
-        gen_date("Sistema de reporte de cuotas", "emailreport"),
+        gen_date("Sistema de reporte de cuotas", "email"),
         gen_date("Administrar plantilla", "admin")
     ]
 }
@@ -46,7 +46,7 @@ class Conf extends React.Component {
                     </h2>
                     <div className="conf-box">
                         <span>
-                            Reportar notas automáticamente los Dias
+                            Reportar cuotas automáticamente los Dias
                         </span>
                         <select defaultValue={1} className="select-gui">
                             {
