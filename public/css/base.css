@@ -193,6 +193,17 @@ html {
     background-repeat: no-repeat;
 }
 
+
+.fill {
+    width: 100%;
+    height: 100%;
+}
+.center, .medio {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
 .Controlbutton {
     padding: 5px;
     height: 50px;
@@ -220,8 +231,29 @@ html {
 
 }
 
+
+
 .Controlbutton:hover {
  background-color: var(--bg-object-hover);
+}
+
+.login {
+    width: 300px;
+    padding: 10px;
+}
+
+.button {
+    transition: 0.4s;
+    padding: 20px;
+    border-radius: 15px;
+    background-color: var(--bg-object);
+    float: left;
+    width: max-content;
+    height: max-content;
+    cursor: pointer;
+}
+.button:hover {
+    background-color: var(--bg-object-hover);
 }
 
 .search-select {
@@ -247,6 +279,18 @@ html {
 }
 
 .search-input:focus {
+    border: none;
+    outline: none;
+}
+
+.input {
+    
+    border: none;
+    padding: 10px;
+    background-color: var(--bg-object);
+
+}
+.input:focus {
     border: none;
     outline: none;
 }

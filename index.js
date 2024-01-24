@@ -1,8 +1,7 @@
 //let electron = require("electron");
-let {BrowserWindow, app} = require("electron")
+let {BrowserWindow, app} = require("electron");
+let server = require("./server.js");
 //let {BrowserWindow, app} = electron;
-let express = require("express")
-let server = express();
 
 global.nombre = "carlos"
 
@@ -27,14 +26,8 @@ app.addListener("ready", () => {
         minWidth: 1000
     });
 
-    server.use("/", express.static("./public"));
-    let PORT = 6686;
-    server.listen(PORT, () => {
-        win.loadURL(`http://localhost:${PORT}/init.html`);
-        console.log("server open in the port: " +  PORT);
-        require("@electron/remote/main").initialize()
-
-    })
+    server.run(6606, win);
+    
 
 
 

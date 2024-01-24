@@ -1,0 +1,58 @@
+[
+    {
+        "ci": 30433425,
+        "name_student": "Jhohan Guarema",
+        "curso": "año3A",
+        "email": "jhohanguarema3@gmail.com",
+        "year_income": 2023,
+        "direction": "fundación Mendoza-Barcelona ",
+        "ci_parent": 3672355,
+        "tlf": "04145428426",
+        "name_parent": "Nancy Marcano ",
+        "gender": 1,
+        "notas":[20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+        "pays":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+        "ci": 30433188,
+        "name_student": "Jeremy Rodriguez",
+        "curso": "grado5",
+        "email": "alexanderbauza26@gmail.com",
+        "year_income": 2021,
+        "direction": "Chorreron - Guanta",
+        "ci_parent": 30433188,
+        "tlf": "02120889319",
+        "name_parent": "Jeremy Rodriguez",
+        "gender": 1,
+        "notas":[20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+        "pays":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100]
+    },
+    {
+        "ci": 30839786,
+        "name_student": "Daniel Tayupo",
+        "curso": "grado4",
+        "email": "danieltay1308@gmail.com",
+        "year_income": 2019,
+        "direction": "Mesones - Barcelona ",
+        "ci_parent": 30389786,
+        "tlf": "04148016398",
+        "name_parent": "Daniel Tayupo ",
+        "gender": 1,
+        "notas":[20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+        "pays":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+        "ci": 31496091,
+        "name_student": "Carlos Pages",
+        "curso": "año2B",
+        "email": "carlosxpages@gmail.com",
+        "year_income": 2016,
+        "direction": "Casco central, Residencia 5 de julio, Apartamento 12A",
+        "ci_parent": 19717606,
+        "tlf": "04127017741",
+        "name_parent": "Mi representante",
+        "gender": 1,
+        "notas":[20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+        "pays":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    }
+]

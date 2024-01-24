@@ -3,9 +3,28 @@ let remote = require("@electron/remote")
 
 class App extends React.Component {
 
+    state = {
+        search: "",
+        curso:"none",
+        filter:"name_student"
+    }
 
     render() {
 
+        let items = [...test_dates.items];
+
+        items = items.filter(x=> {
+
+            if (["all", "none"].includes(this.state.curso)) return true;
+
+            return x.curso === this.state.curso
+        })
+        
+        items = items.filter(x=> {
+            if (this.state.search === "") return true;
+
+            return (x[this.state.filter]+"").toUpperCase().includes(this.state.search.toUpperCase())
+        })
 
         return(
             <div className="marco">
@@ -15,13 +34,17 @@ class App extends React.Component {
                             Agregar alumno
                         </ControlButton>
                         <ControlButton img="/img/gui/db.svg" click={() => {
-                            sessionStorage.setItem("path_db", "");
+                            sessionStorage.removeItem("db")
                             document.location.href = "/init.html"
                         }}>
                             Cambiar de plantilla
                         </ControlButton>
                         <ControlButton img="/img/gui/conf.svg" click={() => {
-                            openWin("/conf.html")
+                            openWin("/conf.html", {
+                                width: 1000,
+                                height: 700,
+                                resizable: "no"
+                            })
                         }}>
                             Configuraciones de la plantilla
                         </ControlButton>
@@ -29,8 +52,14 @@ class App extends React.Component {
                         
                     </div>
                     <div className="top2">
-                        <select defaultValue={"none"} className="select-gui">
-                            <option value={"none"} className="select-gui-option">
+                        <select defaultValue={"none"} className="select-gui" onChange={(x) => {
+                            let curso = (x.target.value);
+
+                            this.setState({
+                                curso
+                            })
+                        }}>
+                            <option value={this.state.curso} className="select-gui-option">
                                 Selecciona un grupo o sección
                             </option>
                             {
@@ -46,13 +75,25 @@ class App extends React.Component {
                         </select>
                         <div style={{float:"left", width:"6px", height:"50px"}}></div>
                         <div className="search"  style={{width:"-webkit-fill-available"}}>
-                            <input type="text" className="search-input" placeholder="Buscar..." />
-                            <select defaultValue={test_dates.dates[0].id} className="search-select">
+                            <input type="text" className="search-input" placeholder="Buscar..." onChange={(e) => {
+                                let search = e.target.value;
+
+                                this.setState({search})
+                            }} />
+                            <select defaultValue={test_dates.dates[0].id} className="search-select" onChange={(e) => {
+                                let filter = e.target.value;
+
+                                this.setState({
+                                    filter
+                                })
+                            }}>
                                 <option value={test_dates.dates[0].id} className="select-gui-option">
                                     Filtrar por...
                                 </option>
                                 {
                                     test_dates.dates.map(x=> {
+                                        //console.log(x)
+                                        if (["curso"].includes(x.id)) return [];
 
                                         return(
                                             <option value={x.id} className="select-gui-option">
@@ -73,8 +114,9 @@ class App extends React.Component {
                         id="principal"
                     
                         dates = {test_dates.dates}
-                        items = {test_dates.items}
+                        items = {items}
                         states = {test_dates.states}
+                        
 
                     />
                 </div>

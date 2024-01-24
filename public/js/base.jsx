@@ -1,22 +1,39 @@
 let remote = require("@electron/remote")
 
 //process(remote.require("./remote_lib.js").getcwd())
+let msg = (message, title) => remote.dialog.showMessageBoxSync(null, {
+    message:message,
+    title: title||"Sistema de Gestion",
 
-function openWin(url, args) {
-    let win = open(url, "", "");
+})
+
+// alert
+
+function openWin(url, args, subapi) {
+
+    let keys = Object.keys(args);
+
+    let arr = keys.map(x=> {
+        return x+ `=` + args[x];
+    })
+
+    let win = open(url, "", arr.join(","));
 
     win.args = args;
     win.window.require = require;
+    win.window.subapi = subapi;
     win.window.reload = () => {
         win.close();
-        openWin(url, args);
+        openWin(url, args, subapi);
     }
     win.addEventListener("loadeddata", () => {
         win.window.require = require;
+        win.window.subapi = subapi;
 
     })
     win.onloadstart = () => {
         win.window.require = require;
+        win.window.subapi = subapi;
 
     }
 
@@ -298,7 +315,7 @@ let onRender = () => {
 
         let size = target.offsetWidth;
         let attributes = target.attributes
-        console.log(size, attributes.idp.nodeValue, attributes.tid.nodeValue)
+        // console.log(size, attributes.idp.nodeValue, attributes.tid.nodeValue)
         tables[attributes.tid.nodeValue] = tables[attributes.tid.nodeValue]||{};
         tables[attributes.tid.nodeValue][attributes.idp.nodeValue] = size;
     }
@@ -409,9 +426,12 @@ class TableHeaderDate extends React.Component {
 
     }
     render() {
-
+        // console.log(this.props)
         return(
-            <div className="table-head-date" tid={this.props.tableid} idp={this.props.id}>
+            <div className="table-head-date" tid={this.props.tableid} idp={this.props.id} onClick={() => {
+
+                genlink(this.props.click)(this.props.id)
+            }}>
                 {this.props.children}
             </div>
         )
@@ -464,7 +484,7 @@ class TableBodyRowDate extends React.Component {
 
 let tables = {}
 
-class Table extends React.Component {
+class Table extends React.Component { // id, dates, items, states
 
     state = {
         ordenado_por: "",
@@ -480,7 +500,11 @@ class Table extends React.Component {
     }
 
     ordenar_por(id, invert) {
-
+        // console.log(id, invert)
+        this.setState({
+            ordenado_por: id,
+            invert: invert
+        })
     };
 
     componentDidMount() {
@@ -510,6 +534,14 @@ class Table extends React.Component {
         let table_dates = this.props.dates.map(x => x.id);
         if (tables[this.props.id] === undefined) tables[this.props.id] = {}
 
+        let items = this.props.items;
+
+        items = _.sortBy(items, this.state.ordenado_por);
+
+        if (this.state.invert) {
+            items = items.reverse()
+        }
+
         return(
             <div className="table">
                 <div className="sub-table"
@@ -524,7 +556,15 @@ class Table extends React.Component {
                         {
                             this.props.dates.map(x => {
                                 return(
-                                    <TableHeaderDate click size={this.state.sizes} id={x.id} tableid={this.props.id}>
+                                    <TableHeaderDate click={(id) => {
+                                        let invert = false
+                                        if (id === this.state.ordenado_por) {
+                                            invert = !this.state.invert
+                                        }
+                                        this.ordenar_por(id, invert);
+
+
+                                    }} size={this.state.sizes} id={x.id} tableid={this.props.id}>
                                         {x.caption}
                                     </TableHeaderDate>
                                 )
@@ -532,13 +572,13 @@ class Table extends React.Component {
                         }
                     </div>
                     <div className="table-body" style={{
-                                        left: this.state.x_scroll,
-                                        display: (this.state.table_visible?"block":"none")
+                        left: this.state.x_scroll,
+                        display: (this.state.table_visible?"block":"none")
                     }} >
                         <div className="table-sub-body" style={{left: -this.state.x_scroll, padding: "0px"}} >
 
                             {
-                                this.props.items.map(x  => {
+                                items.map(x  => {
                                     return(
                                         <TableBodyRowDate 
                                             data={x} 
@@ -584,5 +624,103 @@ function generate_code(long) {
 
     return salida
 
+}
+
+function server(host, user, pass) {
+    host = (host||"") + "/api"
+    let me = {
+        host,
+        user,
+        pass,
+
+        connect: () => {
+            return send(host + "/connect", {
+                auth:{
+                    user:me.user,
+                    pass:me.pass
+                }
+            }).then(x=> {
+                if (x.error) {
+                    me.on.error(`status error to connect server: `+ x.error, x.error)
+                    return
+                };
+
+                me.on.connected();
+            }).catch(me.on.error)
+        },
+        connectSync: () => {
+            let x = {};
+            let error = 0;
+            try {
+                
+                x = load.post(host + "/connect", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    }
+                });
+
+                error = x.error
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return 3
+            }
+            if (x.error) {
+                me.on.error(`status error to connect server: `+ x.error, x.error)
+                return x.error
+            };
+
+            me.on.connected()
+
+            return error
+        },
+        on: {
+            error: (e, status) => {
+                console.error(e)
+            },
+            connected: () => {
+                console.log(`Client Connect to server: '${host.slice(0, -4)}'`)
+
+            }
+        },
+        get_list:(start, long) => {
+            try {
+                
+                return load.post(host + "/get_list", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    start, 
+                    long
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        configs: (datas) => {
+            return load.post(host + "/configs", {
+                auth:{
+                    user:me.user,
+                    pass:me.pass
+                },
+                new_datas: datas
+            })
+        },
+        sendemail:(subject, to, body) => {
+            return load.post(host + "/sendmail", {
+                auth:{
+                    user:me.user,
+                    pass:me.pass
+                },
+                subject,
+                to,
+                body
+            })
+        }
+    };
+
+    return me;
 }
 

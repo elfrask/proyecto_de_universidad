@@ -1,7 +1,7 @@
-let remote = require("@electron/remote")
+let remote = require("@electron/remote");
 
 function dbs(caption, path) {
-    return {caption: caption, path: path}
+    return {caption: caption, host: path}
 }
 
 let data= {
@@ -10,10 +10,7 @@ let data= {
         gen_date("Remotas", "remote"),
     ],
     dbs: [
-        dbs("Estudiantes", "./saves/dbs/students"),
-        dbs("Empleados", "./saves/dbs/students"),
-        dbs("Maestros", "./saves/dbs/students"),
-        dbs("Gastos", "./saves/dbs/students"),
+        dbs("Estudiantes", "http://localhost:6626"),
     ]
 };
 
@@ -27,7 +24,7 @@ class App extends React.Component {
             <div className="marco">
                 <div className="header">
                     <div className="top1">
-                        <ControlButton img="/img/gui/adddb.svg">
+                        <ControlButton img="/img/gui/add_db.svg">
                             Nueva plantilla
                         </ControlButton>
                         <ControlButton img="/img/gui/db.svg">
@@ -90,9 +87,36 @@ class App extends React.Component {
                             data.dbs.map(x=>{
                                 return(
                                     <Dbcard title={x.caption} click={() => {
-                                        console.log(`haz abierto la base de datos '${x.path}'`);
-                                        sessionStorage.setItem("path_db", x.path);
-                                        document.location.href = "/";
+
+                                        // let tempserver = server(x.host, "admin")
+
+                                        openWin("/login.html", {
+                                            width:"400",
+                                            height:"300",
+                                            resizable:"yes",
+                                            menubar:"no"
+                                        }, {
+                                            host: x.host,
+                                            done: (host, user, pass) => {
+
+                                                
+
+                                                sessionStorage.setItem("db", JSON.stringify(
+                                                    {
+                                                        host:x.host,
+                                                        user: user,
+                                                        pass: pass
+                                                    }
+                                                ));
+
+                                                document.location.href = "/";
+                                            }
+                                        })
+
+
+                                        
+                                        
+                                                                               
                                     }}>
 
                                     </Dbcard>

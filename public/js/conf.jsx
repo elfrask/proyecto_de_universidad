@@ -36,7 +36,24 @@ function preventDefaultClose() {
 }
 
 class Conf extends React.Component {
+    state = {
+        loaded: false,
+        email: "",
+        token_mail: "",
+        smtp:"",
+
+    };
+
+    componentDidMount() {
+        let configs = MyServer.configs();
+        // console.log(configs)
+        this.setState({...configs.data});
+    }
     render() {
+
+        if (!this.state.loaded) {
+            return []
+        }
 
         return(
             <div className="content">
@@ -64,19 +81,25 @@ class Conf extends React.Component {
                         <span>
                             Correo Emisor
                         </span>
-                        <input type="text"  placeholder="Correo o usuario"/>
+                        <input type="text"  placeholder="Correo o usuario" id="_email" defaultValue={this.state.email}/>
                     </div>
                     <div className="conf-box">
                         <span>
                             Token o clave de acceso
                         </span>
-                        <input type="text"  placeholder="clave o token"/>
+                        <input type="password"  placeholder="clave o token" id="_token_mail" defaultValue={this.state.token_mail}/>
                     </div>
                     <div className="conf-box">
                         <span>
-                            dirección del servidor smtp
+                            Contraseña
                         </span>
-                        <input type="text"  placeholder="dirección smtp"/>
+                        <input type="password"  placeholder="contraseña" id="_pass_mail" defaultValue={this.state.pass_mail}/>
+                    </div>
+                    <div className="conf-box">
+                        <span>
+                            Nombre del servicio
+                        </span>
+                        <input type="text"  placeholder="gmail | hotmail | yahoo" id="_smtp" defaultValue={this.state.smtp}/>
                     </div>
                     
                     <br />
@@ -84,7 +107,24 @@ class Conf extends React.Component {
                 </section>
                 <hr />
                 <section id="admin">
-                    Admin
+                    <h2>
+                        Credenciales y acceso
+                    </h2>
+                    {/* <div className="conf-box">
+                        <span>
+                            Usuario de acceso
+                        </span>
+                        <input type="text"  placeholder="Usuario" id="_user" defaultValue={"admin"}/>
+                    </div> */}
+                    <div className="conf-box">
+                        <span>
+                            Cambiar Contraseña
+                        </span>
+                        <input type="password"  placeholder="nueva contraseña" id="_pass" defaultValue={""}/>
+                    </div>
+                    <h4>
+                        se esta trabajando por un sistema de usuarios con claves y accesos
+                    </h4>
                 </section>
                 
             </div>
