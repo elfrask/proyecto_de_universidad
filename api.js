@@ -4,18 +4,14 @@ let mysql = require("mysql");
 let datas = require("./datas.json");
 let mail = require("nodemailer");
 let bp = require("body-parser");
-let cors = require("cors")
+let cors = require("cors");
+let db = require("./db.js");
+let fs = require("fs")
 
 app.use(bp.json());
 app.use(cors())
 
-let admin_user = {
-    user:"admin",
-    pass:"admin"
-}
-let accounts = [
-    admin_user
-];
+
 
 require("dotenv").config();
 
@@ -27,16 +23,56 @@ mysql.createConnection({
 })
 
 
-let configs = {
-    loaded: true,
-    email: "vinestar@yahoo.com",
-    token_mail: "ypcqmlzdjvdwbojp",
-    pass_mail: "akzhqejwxprxtqte",
-    smtp:"yahoo",
-    // smtp:"smtp.mail.yahoo.com:465",
+function load(obj, file_json) {
+    function save_configs(data) {
+        fs.writeFileSync(file_json, JSON.stringify(data||obj))
+    }
+    
+    if (fs.existsSync(file_json)) {
+        let temp = JSON.parse(
+            fs.readFileSync(file_json, "utf-8")
+        );
 
+        Object.assign(obj, temp);
+    } else {
+        save_configs();
+    }
 
+    obj.save = (d) => save_configs(d);
+    
+    return obj;
 }
+
+
+const configs = {
+    loaded: true,
+    email: "",
+    token_mail: "",
+    pass_mail: "",
+    smtp:"",
+    // smtp:"smtp.mail.yahoo.com:465",
+}
+
+let admin_user = {
+    user:"admin",
+    pass:"admin"
+}
+
+let accounts = [];
+
+if (!fs.existsSync("conf")) {
+    fs.mkdirSync("conf")
+}
+
+load(accounts, "conf/accounts.json")
+load(configs, "conf/configs_server.json");
+load(admin_user, "conf/root.json")
+
+admin_user.root = true;
+
+accounts.push(admin_user)
+
+
 
 
 let sendmail = (subject, to, body) => {
@@ -95,7 +131,9 @@ app.post("/get_list", async (req, res) => {
 
     let results = await authFunction(auth, async () => {
 
-        return datas
+        let datas = await db.Student.find();
+
+        return datas;
     },  (async (e) => {
         error = e;
         return [];
@@ -110,7 +148,7 @@ app.post("/get_list", async (req, res) => {
 });
 
 app.post("/connect", async (req, res) => {
-    let {start, long, auth} = req.body;
+    let {auth} = req.body;
     let error = 0;
 
     await authFunction(auth, async () => {
@@ -134,12 +172,18 @@ app.post("/configs", async (req, res) => {
     
 
     let data = await authFunction(auth, async () => {
-        configs = {...configs, ...new_data};
+        Object.assign(configs, new_data)
 
         if (!["", undefined, null, NaN].includes(new_data?.pass)) {
             console.log("config pass: ", new_data.pass)
             admin_user.pass = new_data.pass
+            admin_user.save({
+                user: admin_user.user,
+                pass: admin_user.pass
+            })
         }
+        console.log("set configs: ", configs, new_data)
+        configs.save();
 
         return configs;
     },  (async (e) => {

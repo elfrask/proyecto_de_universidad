@@ -455,12 +455,18 @@ class TableBodyRowDate extends React.Component {
         
         return(
             
-            <div className="table-body-row-date" >
+            <div className="table-body-row-date" onDoubleClick={() => {
+                let data = this.props.data;
+                // alert(`mostrar los datos de: '${data.name_student}'`)
+
+                genlink(this.props.dbclick)(data)
+            }} >
                 {
                     this.props.table_shows.map(x=> {
                         let data = this.props.data;
                         let show = data[x];
                         let estados = this.props.states
+
 
 
                         if (estados!== undefined) {
@@ -471,7 +477,7 @@ class TableBodyRowDate extends React.Component {
                         }
 
                         return(
-                            <TableBodyDate size={this.props.sizes[x]}>
+                            <TableBodyDate size={this.props.sizes[x]} >
                                 {show}
                             </TableBodyDate>
                         )
@@ -484,7 +490,15 @@ class TableBodyRowDate extends React.Component {
 
 let tables = {}
 
-class Table extends React.Component { // id, dates, items, states
+class Table extends React.Component { // id, dates, items, states, dbclick
+
+    props = {
+        dbclick: (e) => {},
+        id:"",
+        dates:[],
+        items:[],
+        states:[]
+    }
 
     state = {
         ordenado_por: "",
@@ -585,6 +599,7 @@ class Table extends React.Component { // id, dates, items, states
                                             table_shows={table_dates} 
                                             sizes={this.state.sizes} 
                                             states={this.state.states}
+                                            dbclick={this.props.dbclick}
                                         ></TableBodyRowDate>
                                     )
                                 })
@@ -599,11 +614,18 @@ class Table extends React.Component { // id, dates, items, states
 }
 
 class Dbcard extends React.Component {
+    constructor(props) {
+        super(props)
+        this.props = props;
+    }
+    props = {
+        img: "/img/gui/db.svg"
+    }
     render() {
 
         return(
             <div className="db-card" onClick={genlink(this.props.click)}>
-                <div className="db-card-img img" style={{backgroundImage:"url('/img/gui/db.svg')"}}>
+                <div className="db-card-img img" style={{backgroundImage:`url(${this.props.img})`}}>
                 </div>
                 <div className="db-card-title">
                     {this.props.title}
@@ -612,6 +634,8 @@ class Dbcard extends React.Component {
         )
     }
 }
+
+
 
 function generate_code(long) {
     
@@ -705,7 +729,7 @@ function server(host, user, pass) {
                     user:me.user,
                     pass:me.pass
                 },
-                new_datas: datas
+                new_data: datas
             })
         },
         sendemail:(subject, to, body) => {

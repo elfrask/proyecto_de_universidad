@@ -1,7 +1,7 @@
 let remote = require("@electron/remote");
 
-function dbs(caption, path) {
-    return {caption: caption, host: path}
+function dbs(caption, img, path) {
+    return {caption: caption, host: path, img: img}
 }
 
 let data= {
@@ -10,7 +10,7 @@ let data= {
         gen_date("Remotas", "remote"),
     ],
     dbs: [
-        dbs("Estudiantes", "http://localhost:6626"),
+        dbs("Estudiantes", "/img/gui/cstBig.svg", "http://localhost:6626"),
     ]
 };
 
@@ -86,14 +86,14 @@ class App extends React.Component {
                         {
                             data.dbs.map(x=>{
                                 return(
-                                    <Dbcard title={x.caption} click={() => {
+                                    <Dbcard title={x.caption} img={x.img} click={() => {
 
                                         // let tempserver = server(x.host, "admin")
 
                                         openWin("/login.html", {
                                             width:"400",
                                             height:"300",
-                                            resizable:"yes",
+                                            resizable:"no",
                                             menubar:"no"
                                         }, {
                                             host: x.host,

@@ -56,8 +56,9 @@ class Conf extends React.Component {
         }
 
         return(
-            <div className="content">
+            <div className="content" style={{paddingRight:"10px"}}>
                 <section id="email">
+                    <br />
                     <h2>
                         Sistema de reporte de cuotas
                     </h2>
@@ -81,25 +82,25 @@ class Conf extends React.Component {
                         <span>
                             Correo Emisor
                         </span>
-                        <input type="text"  placeholder="Correo o usuario" id="_email" defaultValue={this.state.email}/>
+                        <input type="text"  placeholder="Correo o usuario" name="conf" idpx="email" defaultValue={this.state.email}/>
                     </div>
                     <div className="conf-box">
                         <span>
                             Token o clave de acceso
                         </span>
-                        <input type="password"  placeholder="clave o token" id="_token_mail" defaultValue={this.state.token_mail}/>
+                        <input type="password"  placeholder="clave o token" name="conf" idpx="token_mail" defaultValue={this.state.token_mail}/>
                     </div>
                     <div className="conf-box">
                         <span>
                             Contraseña
                         </span>
-                        <input type="password"  placeholder="contraseña" id="_pass_mail" defaultValue={this.state.pass_mail}/>
+                        <input type="password"  placeholder="contraseña" name="conf" idpx="pass_mail" defaultValue={this.state.pass_mail}/>
                     </div>
                     <div className="conf-box">
                         <span>
                             Nombre del servicio
                         </span>
-                        <input type="text"  placeholder="gmail | hotmail | yahoo" id="_smtp" defaultValue={this.state.smtp}/>
+                        <input type="text" name="conf"  placeholder="gmail | hotmail | yahoo" idpx="smtp" defaultValue={this.state.smtp}/>
                     </div>
                     
                     <br />
@@ -114,13 +115,13 @@ class Conf extends React.Component {
                         <span>
                             Usuario de acceso
                         </span>
-                        <input type="text"  placeholder="Usuario" id="_user" defaultValue={"admin"}/>
+                        <input type="text"  placeholder="Usuario" idp="user" defaultValue={"admin"}/>
                     </div> */}
                     <div className="conf-box">
                         <span>
                             Cambiar Contraseña
                         </span>
-                        <input type="password"  placeholder="nueva contraseña" id="_pass" defaultValue={""}/>
+                        <input type="password"  placeholder="nueva contraseña" name="conf" idpx="pass" defaultValue={""}/>
                     </div>
                     <h4>
                         se esta trabajando por un sistema de usuarios con claves y accesos
@@ -135,6 +136,9 @@ class Conf extends React.Component {
 
 class App extends React.Component {
 
+    state = {};
+
+
 
     render() {
 
@@ -143,7 +147,7 @@ class App extends React.Component {
             <div className="marco">
                 <div className="header">
                     <div className="top1">
-                        <ControlButton img="/img/gui/add.svg" click={() => {
+                        <ControlButton img="/img/gui/close.svg" click={() => {
                             close()
                         }}>
                             Cerrar
@@ -155,7 +159,35 @@ class App extends React.Component {
                         </ControlButton>
                         
 
-                        <ControlButton img="/img/gui/save.svg">
+                        <ControlButton img="/img/gui/save.svg" click={() => {
+                            let confs = document.getElementsByName("conf");
+
+                            let out = [];
+
+                            for (let i = 0; i < confs.length; i++) {
+                                const element = confs[i];
+                                out.push(element)
+                            };
+
+                            let data = {}
+
+                            out.forEach(x=> {
+                                let a = (x.attributes.idpx||{}).value
+                                data[a] = x.value; 
+                            })
+                            
+                            console.log(data)
+
+                            try {
+                                MyServer.configs(data);
+                                msg("los cambios han sido realizados exitosamente", "Guardado")
+                                
+                            } catch (error) {
+                                msg("Hubo un error al guardar las configuraciones, verifique que este conectado a la red o que el servidor este funcionando", "Error")
+                                
+                            }
+
+                        }}>
                             Guardar cambios
                         </ControlButton>
                         

@@ -33,7 +33,7 @@ class App extends React.Component {
                         <ControlButton img="/img/gui/add.svg">
                             Agregar alumno
                         </ControlButton>
-                        <ControlButton img="/img/gui/db.svg" click={() => {
+                        <ControlButton img="/img/gui/logout.svg" click={() => {
                             sessionStorage.removeItem("db")
                             document.location.href = "/init.html"
                         }}>
@@ -116,7 +116,9 @@ class App extends React.Component {
                         dates = {test_dates.dates}
                         items = {items}
                         states = {test_dates.states}
-                        
+                        dbclick ={(e) => {
+                            openWin("/student.html", {}, {id: e.ci})
+                        }}
 
                     />
                 </div>
