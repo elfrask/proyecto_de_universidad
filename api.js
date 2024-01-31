@@ -53,12 +53,12 @@ const configs = {
     // smtp:"smtp.mail.yahoo.com:465",
 }
 
-let admin_user = {
+const admin_user = {
     user:"admin",
     pass:"admin"
 }
 
-let accounts = [];
+const accounts = [];
 
 if (!fs.existsSync("conf")) {
     fs.mkdirSync("conf")
@@ -147,6 +147,75 @@ app.post("/get_list", async (req, res) => {
     )
 });
 
+app.post("/student/edit", async (req, res) => {
+    let {auth, ci, student, dues, notes} = req.body;
+    let error = 0;
+
+    console.log("editar")
+
+    let data = await authFunction(auth, async () => {
+        
+        let student_db = await db.Student.findOne({ci: ci});
+        let notes_db = await db.Notes.findOne({ci: ci});
+        let dues_db = await db.Dues_Student.findOne({ci: ci});
+
+        let asi = Object.assign;
+
+        asi(student_db, student);
+        asi(notes_db, notes);
+        asi(dues_db, dues);
+
+        student_db.save();
+        notes_db.save();
+        dues_db.save();
+
+
+        return {student, dues, notes};
+    },  (async (e) => {
+        error = e;
+        return {
+            student: {},
+            notes: {},
+            dues: {},
+        };
+    }))
+
+    res.json({
+        datas,
+        error
+    })
+})
+
+app.post("/student/get", async (req, res) => {
+    let {auth, ci} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        let datas = {
+            student: {},
+            notes: {},
+            dues: {},
+        }
+
+        datas.student = await db.Student.findOne({ci: ci});
+        datas.notes = await db.Notes.findOne({ci: ci});
+        datas.dues = await db.Dues_Student.findOne({ci: ci});
+
+        return datas;
+    },  (async (e) => {
+        error = e;
+        return {
+            student: {},
+            notes: {},
+            dues: {},
+        };
+    }))
+
+    res.json({
+        data,
+        error
+    })
+})
 app.post("/connect", async (req, res) => {
     let {auth} = req.body;
     let error = 0;

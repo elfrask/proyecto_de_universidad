@@ -39,6 +39,11 @@ class App extends React.Component {
                         }}>
                             Cambiar de plantilla
                         </ControlButton>
+                        <ControlButton img="/img/gui/reload.svg" click={() => {
+                            document.location.reload()
+                        }}>
+                            recargar
+                        </ControlButton>
                         <ControlButton img="/img/gui/conf.svg" click={() => {
                             openWin("/conf.html", {
                                 width: 1000,
@@ -109,7 +114,9 @@ class App extends React.Component {
                                         
                     
                 </div>
-                <div className="body">
+                <div className="body" style={{
+                    overflow:"unset"
+                }}>
                     <Table 
                         id="principal"
                     

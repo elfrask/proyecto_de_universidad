@@ -57,7 +57,7 @@ html {
 .body {
     width: 100%;
     height: calc(100% - 120px);
-    
+    overflow: auto;
 }
 
 .body.one-top {
@@ -317,7 +317,7 @@ html {
 }
 
 .db-card {
-    background-color: var(--bg-object);
+    background-color: #ddd;
     transition: 0.4s;
     overflow: hidden;
     width: 200px;
@@ -329,7 +329,7 @@ html {
 }
 
 .db-card:hover {
-    background-color: var(--bg-object-hover);
+    background-color: #bbb;
 }
 
 .db-card-img {
@@ -347,6 +347,10 @@ html {
 .list-dbs {
 
     background-color: var(--bg-object);
+    background-image: url("/img/gui/bg.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     width: 100%;
     height: -webkit-fill-available;
     overflow-y: auto;
@@ -430,4 +434,99 @@ html {
 .conf-box input:focus, .conf-box select:focus {
     border: none;
     outline: none;
+}
+
+
+.responsive-tables {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(470px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(max-content, 1fr));
+    justify-items: center;
+
+}
+
+.form-table {
+
+    width: 100%;
+    max-width: 450px;
+    height: max-content;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #bbb;
+    margin: 10px;
+
+    ._head {
+        background-color: dodgerblue;
+        color: white;
+        width: 100%;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        font-weight: bold
+    }
+
+    ._body {
+        background-color: rgb(185, 185, 185);
+
+
+        .field {
+            width: 100%;
+            --size: 200px;
+            height: 50px;
+            box-sizing: border-box;
+            border-top: solid gray 1px;
+            display: flex;
+            
+            ._title {
+                float: left;
+                width: var(--size);
+                padding: 10px;
+                box-sizing: border-box;
+                border-right: solid gray 1px;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-weight: bold;
+            }
+            ._field {
+                float: left;
+                width: calc(100% - var(--size));
+                box-sizing: border-box;
+                height: 100%;
+                background-color: #ddd;
+                /* background-color: greenyellow; */
+
+                & input, select {
+                    /* background-color: red; */
+                    width: 100%;
+                    height: 100%;
+                    padding: 10px;
+                    background-color: transparent;
+                }
+
+                
+               
+            }
+        }
+    }
+
+    ._floor {
+        width: 100%;
+        height: 10px;
+        border-top: solid gray 1px;
+    }
+}
+
+input, select {
+    outline: none;
+    border: none
+}
+
+input:focus, select:focus {
+    outline: none;
+    border: none;
 }

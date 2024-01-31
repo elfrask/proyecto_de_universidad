@@ -24,18 +24,18 @@ class App extends React.Component {
             <div className="marco">
                 <div className="header">
                     <div className="top1">
-                        <ControlButton img="/img/gui/add_db.svg">
+                        {/* <ControlButton img="/img/gui/add_db.svg">
                             Nueva plantilla
                         </ControlButton>
                         <ControlButton img="/img/gui/db.svg">
                             Cargar plantilla
+                        </ControlButton> */}
+                        <ControlButton img="/img/gui/add.svg">
+                            Conectarse a una plantilla
                         </ControlButton>
-                        <ControlButton img="/img/gui/net.svg">
-                            Conectarse a una plantilla remota
-                        </ControlButton>
-                        <ControlButton img="/img/gui/import.svg">
+                        {/* <ControlButton img="/img/gui/import.svg">
                             Importar plantilla desde Zip
-                        </ControlButton>
+                        </ControlButton> */}
                         
                         
                     </div>

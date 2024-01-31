@@ -650,6 +650,12 @@ function generate_code(long) {
 
 }
 
+function debug(e) {
+    console.log(e);
+
+    return e
+}
+
 function server(host, user, pass) {
     host = (host||"") + "/api"
     let me = {
@@ -717,6 +723,39 @@ function server(host, user, pass) {
                     },
                     start, 
                     long
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        get_student:(ci) => {
+            try {
+                
+                return load.post(host + "/student/get", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    ci
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        edit_student:(ci, student, notes, dues) => {
+            try {
+                
+                return load.post(host + "/student/edit", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    ci,
+                    notes,
+                    dues,
+                    student
                 })
             } catch (error) {
                 me.on.error(`status error to connect server: `+ 3, 3)
