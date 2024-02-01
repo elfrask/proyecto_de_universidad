@@ -762,6 +762,21 @@ function server(host, user, pass) {
                 return
             }
         },
+        new_student:(ci) => {
+            try {
+                
+                return load.post(host + "/student/edit", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    ci
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
         configs: (datas) => {
             return load.post(host + "/configs", {
                 auth:{

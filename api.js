@@ -147,6 +147,65 @@ app.post("/get_list", async (req, res) => {
     )
 });
 
+app.post("/student/new", async (req, res) => {
+    let {auth, ci} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        let notes = [0, 0, 0, 0, 0, 0, 0, 0, 0 ,0]
+        
+        
+        let Student = new db.Student({
+            ci,
+            ci_parent:0,
+            name_student: "",
+            curso:"none",
+            direction:"",
+            email:"",
+            gender:0,
+            name_parent:"",
+            tlf:"",
+            year_income:0
+        })
+
+        try {
+            
+            Student.save();
+        } catch (error) {
+            error = 10;
+            return {}
+        }
+
+        let Notes = new db.Notes({
+            ci,
+            lapse0: notes,
+            lapse1: notes,
+            lapse2: notes,
+            period: 2023,
+        })
+
+        Notes.save();
+
+        let Dues = new db.Dues_Student({
+            ci,
+            dues:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            period: 2023,
+        });
+
+        Dues.save();
+
+        return {};
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json({
+        data,
+        error
+    })
+})
+
 app.post("/student/edit", async (req, res) => {
     let {auth, ci, student, dues, notes} = req.body;
     let error = 0;

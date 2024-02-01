@@ -30,7 +30,24 @@ class App extends React.Component {
             <div className="marco">
                 <div className="header">
                     <div className="top1">
-                        <ControlButton img="/img/gui/add.svg">
+                        <ControlButton img="/img/gui/add.svg" click={() => {
+
+
+                            openWin("/add_student.html", {
+                                width:"400",
+                                height:"300",
+                                resizable:"no",
+                                menubar:"no"
+                            }, {
+                                host: x.host,
+                                done: () => {
+
+                                    
+
+                                    document.location.reload();
+                                }
+                            })
+                        }}>
                             Agregar alumno
                         </ControlButton>
                         <ControlButton img="/img/gui/logout.svg" click={() => {

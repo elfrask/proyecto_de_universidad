@@ -332,11 +332,11 @@ class App extends React.Component {
                                 field={
                                     <input 
                                         type="text" 
-                                        // idpx="name_student" 
-                                        // name="student" 
-                                        placeholder="" 
+                                        idpx="ci_parent" 
+                                        name="student" 
+                                        placeholder="Cédula del representante"
                                         defaultValue={DATAS.student.ci_parent}
-                                        disabled
+                                        type_value="number"
                                     />
                                 }
                             />
