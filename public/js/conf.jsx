@@ -134,10 +134,23 @@ class Conf extends React.Component {
                         </span>
                         <input type="password"  placeholder="nueva contraseña" name="conf" idpx="pass" defaultValue={""}/>
                     </div>
-                    <h4>
-                        se esta trabajando por un sistema de usuarios con claves y accesos
-                    </h4>
+                    <div className="conf-box">
+                        <span>
+                            Configurar Cuentas y roles:
+                        </span>
+                        <input type="button"  value={"Abrir"} onClick={() => {
+                            openWin("/account.html", {
+
+                            }, {
+                                
+                            })
+                        }}/>
+                    </div>
+                    <br />
+                    <br />
                 </section>
+                <hr />
+
                 <section id="cursos">
                     <h2>
                         Cursos y secciones
@@ -155,6 +168,8 @@ class Conf extends React.Component {
                             })
                         }}/>
                     </div>
+
+                    <br /><br />
                 </section>
                 
             </div>

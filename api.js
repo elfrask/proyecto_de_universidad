@@ -77,7 +77,7 @@ load(admin_user, "conf/root.json")
 
 admin_user.root = true;
 
-accounts.push(admin_user)
+// accounts.push(admin_user)
 
 
 
@@ -142,7 +142,7 @@ let sendmailHTML = (subject, to, template, datas) => {
 async function authFunction(auth, callback, errorcall) {
     
     let user = {};
-    accounts.forEach(x=> {
+    [...accounts, admin_user].forEach(x=> {
         if (auth.user === x.user) user = x;
     });
 
@@ -487,6 +487,16 @@ app.post("/curso/delete", async (req, res) => {
         };
         await db.Cursos.deleteOne({id: curso});
 
+        let sort = await db.Cursos.find({});
+        let sort2 = lodash.sortBy(sort, "index");
+
+        sort2.forEach((x, y) => {
+            x.index = y;
+            x.save();
+        })
+
+        
+
         return {};
     },  (async (e) => {
         error = e;
@@ -522,6 +532,121 @@ app.post("/student/get", async (req, res) => {
             notes: {},
             dues: {},
         };
+    }))
+
+    res.json({
+        data,
+        error
+    })
+});
+
+app.post("/accounts/get", async (req, res) => {
+    let {auth} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        let datas = [...accounts]
+
+        return datas;
+    },  (async (e) => {
+        error = e;
+        return []
+    }))
+
+    res.json({
+        data,
+        error
+    })
+});
+
+app.post("/account/new", async (req, res) => {
+    let {auth, user, pass} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        let datas = {}
+        let exist = false;
+
+        accounts.forEach(x=> {
+            if (x.user === user) {
+                exist = true
+            }
+        });
+
+        if (exist) {
+            error = 10;
+            return[];
+        };
+
+        accounts.push({
+            user,
+            pass,
+            permisos:{
+                students: 0,
+                dues: 0,
+                notes: 0,
+                configs: 0,
+            },
+            root: false
+        })
+
+        accounts.save();
+
+        return datas;
+    },  (async (e) => {
+        error = e;
+        return []
+    }))
+
+    res.json({
+        data,
+        error
+    })
+});
+
+app.post("/accounts/edit", async (req, res) => {
+    let {auth, accounts: a} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        
+        [...a].forEach((x, i)=> {
+            accounts[i] = a[i]
+        });
+
+        accounts.save();
+
+        return {};
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json({
+        data,
+        error
+    })
+});
+
+app.post("/accounts/delete", async (req, res) => {
+    let {auth, user} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        
+        accounts.forEach((x, i)=>{
+            if (x.user === user) {
+                accounts.splice(i, 1);
+                // console.log(x)
+            }
+        })
+
+        accounts.save();
+
+        return {};
+    },  (async (e) => {
+        error = e;
+        return {};
     }))
 
     res.json({

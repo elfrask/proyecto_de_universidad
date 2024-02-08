@@ -830,6 +830,20 @@ function server(host, user, pass) {
                 return
             }
         },
+        get_accounts:() => {
+            try {
+                
+                return load.post(host + "/accounts/get", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    }
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
         edit_student:(ci, student, notes, dues, dues_state) => {
             try {
                 
@@ -849,7 +863,7 @@ function server(host, user, pass) {
                 return
             }
         },
-        edit_curso:(cursos) => {
+        edit_cursos:(cursos) => {
             try {
                 
                 return load.post(host + "/cursos/edit", {
@@ -858,6 +872,52 @@ function server(host, user, pass) {
                         pass:me.pass
                     },
                     cursos
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        edit_accounts:(accounts) => {
+            try {
+                
+                return load.post(host + "/accounts/edit", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    accounts
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        add_student:(ci) => {
+            try {
+                
+                return load.post(host + "/student/new", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    ci
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        add_account:(user, pass) => {
+            try {
+                
+                return load.post(host + "/account/new", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    user,
+                    pass
                 })
             } catch (error) {
                 me.on.error(`status error to connect server: `+ 3, 3)
@@ -918,6 +978,21 @@ function server(host, user, pass) {
                         pass:me.pass
                     },
                     curso
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        delete_account:(user) => {
+            try {
+                
+                return load.post(host + "/accounts/delete", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    user
                 })
             } catch (error) {
                 me.on.error(`status error to connect server: `+ 3, 3)

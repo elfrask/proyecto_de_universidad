@@ -71,7 +71,7 @@ class App extends React.Component {
 
                             
                             try {
-                                MyServer.edit_curso(data_req.cursos);
+                                MyServer.edit_cursos(data_req.cursos);
                                 msg("los cambios han sido realizados exitosamente", "Guardado")
                                 
                             } catch (error) {
