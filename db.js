@@ -42,14 +42,38 @@ let Dues_Student = new Schema({
     ci,
     // dues es la deudas de los pagos de los periodos que duran 1 año equivalente a 12 meses
     dues: [Number, Number, Number, Number, Number, Number, Number, Number, Number, Number, Number, Number],
+    dues_state: [Number, Number, Number, Number, Number, Number, Number, Number, Number, Number, Number, Number],
     period: Number,
+})
+
+let Cursos = new Schema({
+    id: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    caption: String,
+    materias:[
+        String,
+        String,
+        String,
+        String,
+        String,
+        String,
+        String,
+        String,
+        String,
+        String,
+    ],
+    index: Number
 })
 
 
 let Modelos = {
     Student: model("student", Student),
     Notes: model("notes", Notes),
-    Dues_Student: model("dues_student", Dues_Student)
+    Dues_Student: model("dues_student", Dues_Student),
+    Cursos: model("curso", Cursos),
 }
 
 

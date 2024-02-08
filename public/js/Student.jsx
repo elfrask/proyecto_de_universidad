@@ -1,4 +1,4 @@
-let remote = require("@electron/remote")
+// let remote = require("@electron/remote")
 
 let exitcode = 0;
 
@@ -29,59 +29,18 @@ function preventDefaultClose() {
 }
 
 
-class FormularioTablas extends React.Component {
-
-    props = {
-        children: [],
-        title: ""
-    }
-    state = {
-
-    };
-    render() {
-
-        return (
-            <div className="form-table">
-                <div className="_head">
-                    {this.props.title}
-                </div>
-                <div className="_body">
-                    {this.props.children}
-                </div>
-                <div className="_floor">
-
-                </div>
-            </div>
-        )
-    }
-}
-
-class FieldTable extends React.Component {
-    props = {
-        field: [],
-        title: ""
-    }
-
-    render() {
-
-        return(
-            <div className="field">
-                <div className="_title">
-                    {this.props.title}
-                </div>
-                <div className="_field">
-                    {this.props.field}
-                </div>
-            </div>
-        )
-    }
-}
-
-
 let DATAS = MyServer.get_student(subapi.id).data;
+let CURSOS = MyServer.get_cursos().data;
 
+let materias = [];
 
-console.log(DATAS);
+([...CURSOS.cursos]).forEach(x=>{
+    if (DATAS.student.curso === x.id) {
+        materias = x.materias
+    }
+});
+
+console.log(DATAS, materias);
 
 
 class App extends React.Component {
@@ -156,6 +115,12 @@ class App extends React.Component {
                                         return data["dues_" + x];
                                     })
                                 ],
+                                dues_state: [
+                                    ...range(0, 12).map(x=>{
+
+                                        return data["dues_state_" + x];
+                                    })
+                                ],
                                 notes: {
                                     lapse0:[
                                         ...range(0, 10).map(x=>{
@@ -180,10 +145,11 @@ class App extends React.Component {
                             }
 
                             console.log(data_req);
+                            // return
 
 
                             try {
-                                MyServer.edit_student(subapi.id, data_req.student, data_req.notes, data_req.dues);
+                                MyServer.edit_student(subapi.id, data_req.student, data_req.notes, data_req.dues, data_req.dues_state);
                                 msg("los cambios han sido realizados exitosamente", "Guardado")
                                 
                             } catch (error) {
@@ -198,7 +164,25 @@ class App extends React.Component {
                         }}>
                             recargar
                         </ControlButton>
-                        <ControlButton img="/img/gui/delete.svg">
+                        <ControlButton img="/img/gui/delete.svg" click={() => {
+                            
+                            let result = remote.dialog.showMessageBoxSync(null, {
+                                title:"Eliminar",
+                                message:"¿Seguro que quieres eliminar a este estudiante?",
+                                buttons: [
+                                    "No, Cancelar",
+                                    "Si, Eliminar", 
+                                ]
+                            });
+
+                            console.log(result);
+
+                            if (result) {
+                                MyServer.delete_student(subapi.id)
+                                subapi.parent.location.reload();
+                                close()
+                            }
+                        }}>
                             Eliminar estudiante
                         </ControlButton>
 
@@ -381,8 +365,8 @@ class App extends React.Component {
 
                         
                         {/* PAGO DE CUOTAS  */}
-
-
+                        
+                        
                         <FormularioTablas
                             title="Estado de cuotas"
                         >
@@ -395,32 +379,38 @@ class App extends React.Component {
                                         <FieldTable 
                                             title={x}
                                             field={
-                                                // <select
-                                                //     defaultValue={DATAS.dues.dues[i]}
-                                                //     name="student"
-                                                //     idpx={"dues_" + i}
-                                                //     type_value="number"
-                                                // >
-                                                //     {
-                                                //         ["No pagado", "Parcialmente pagado", "Pagado"].map((y, ii)=>{
-    
-                                                //             return(
-                                                //                 <option value={ii}>
-                                                //                     {y}
-                                                //                 </option>
-                                                //             )
-                                                //         })
-                                                //     }
-                                                // </select>
+                                                [
 
-                                                <input 
-                                                    defaultValue={DATAS.dues.dues[i]}
-                                                    name="student"
-                                                    idpx={"dues_" + i}
-                                                    type_value="number"
-                                                    type="number"
+                                                    <input 
+                                                        defaultValue={DATAS.dues.dues[i]}
+                                                        name="student"
+                                                        idpx={"dues_" + i}
+                                                        type_value="number"
+                                                        type="number"
+                                                    
+                                                    />,
+
+                                                    <select
+                                                        defaultValue={DATAS.dues.dues_state[i]}
+                                                        name="student"
+                                                        idpx={"dues_state_" + i}
+                                                        type_value="number"
+                                                    >
+                                                        {
+                                                            ["No pagado", "Pagado"].map((y, ii)=>{
+        
+                                                                return(
+                                                                    <option value={ii}>
+                                                                        {y}
+                                                                    </option>
+                                                                )
+                                                            })
+                                                        }
+                                                    </select>,
+    
+                                                    
+                                                ]
                                                 
-                                                />
                                             }
                                         />
                                     )
@@ -428,7 +418,6 @@ class App extends React.Component {
                             }
                             
                         </FormularioTablas>
-                       
                         
                         {/* NOTAS DEL ESTUDIANTE Y RASGO ACADÉMICO */}
 
@@ -472,6 +461,7 @@ class App extends React.Component {
                             {
                                 range(0, 3).map(lapse=>{
 
+
                                     return(
                                         <div
                                             style={{
@@ -482,11 +472,11 @@ class App extends React.Component {
                                         >
 
                                             {
-                                                range(0, 10).map(x=>{
+                                                materias.map((obj, x)=>{
 
                                                     return(
                                                         <FieldTable 
-                                                            title={"Materia: " + (x + 1)}
+                                                            title={obj}
                                                             field={
                                                                 <input 
                                                                     defaultValue={DATAS.notes["lapse" + lapse][x]}

@@ -1,15 +1,31 @@
 let remote = require("@electron/remote")
 
 //process(remote.require("./remote_lib.js").getcwd())
-let msg = (message, title) => remote.dialog.showMessageBoxSync(null, {
-    message:message,
-    title: title||"Sistema de Gestion",
+try {
+    remote = (subapi||{}).remote||remote;
+    
+} catch (error) {
+    
+}
 
-})
+
+let msg = (message, title) => {    
+    remote.dialog.showMessageBoxSync(null, {
+        message:message,
+        title: title||"Sistema de Gestion",
+
+    })
+}
 
 // alert
 
 function openWin(url, args, subapi) {
+
+    let me = {
+        close:() => {
+            win.close();
+        },
+    }
 
     let keys = Object.keys(args);
 
@@ -21,7 +37,12 @@ function openWin(url, args, subapi) {
 
     win.args = args;
     win.window.require = require;
-    win.window.subapi = subapi;
+    win.window.subapi = {
+        ...subapi,
+        remote: remote,
+        require: require,
+        win: true,
+    };
     win.window.reload = () => {
         win.close();
         openWin(url, args, subapi);
@@ -39,7 +60,10 @@ function openWin(url, args, subapi) {
 
     win.onclose = () => {
         win = null;
-    }
+    };
+
+
+    return me
 }
 
 let go = (id) => document.getElementById(id);
@@ -635,6 +659,53 @@ class Dbcard extends React.Component {
     }
 }
 
+class FormularioTablas extends React.Component {
+
+    props = {
+        children: [],
+        title: ""
+    }
+    state = {
+
+    };
+    render() {
+
+        return (
+            <div className="form-table">
+                <div className="_head">
+                    {this.props.title}
+                </div>
+                <div className="_body">
+                    {this.props.children}
+                </div>
+                <div className="_floor">
+
+                </div>
+            </div>
+        )
+    }
+}
+
+class FieldTable extends React.Component {
+    props = {
+        field: [],
+        title: ""
+    }
+
+    render() {
+
+        return(
+            <div className="field">
+                <div className="_title">
+                    {this.props.title}
+                </div>
+                <div className="_field">
+                    {this.props.field}
+                </div>
+            </div>
+        )
+    }
+}
 
 
 function generate_code(long) {
@@ -655,6 +726,7 @@ function debug(e) {
 
     return e
 }
+
 
 function server(host, user, pass) {
     host = (host||"") + "/api"
@@ -744,7 +816,21 @@ function server(host, user, pass) {
                 return
             }
         },
-        edit_student:(ci, student, notes, dues) => {
+        get_cursos:() => {
+            try {
+                
+                return load.post(host + "/cursos/get", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    }
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        edit_student:(ci, student, notes, dues, dues_state) => {
             try {
                 
                 return load.post(host + "/student/edit", {
@@ -755,22 +841,98 @@ function server(host, user, pass) {
                     ci,
                     notes,
                     dues,
-                    student
+                    student,
+                    dues_state
                 })
             } catch (error) {
                 me.on.error(`status error to connect server: `+ 3, 3)
                 return
             }
         },
-        new_student:(ci) => {
+        edit_curso:(cursos) => {
             try {
                 
-                return load.post(host + "/student/edit", {
+                return load.post(host + "/cursos/edit", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    cursos
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        duesreport:() => {
+            try {
+                
+                return load.post(host + "/duesreport", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        add_student:(ci) => {
+            try {
+                
+                return load.post(host + "/student/new", {
                     auth:{
                         user:me.user,
                         pass:me.pass
                     },
                     ci
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        delete_student:(ci) => {
+            try {
+                
+                return load.post(host + "/student/delete", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    ci
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        delete_curso:(curso) => {
+            try {
+                
+                return load.post(host + "/curso/delete", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    curso
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        add_curso:(id, title) => {
+            try {
+                
+                return load.post(host + "/curso/new", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    id, title
                 })
             } catch (error) {
                 me.on.error(`status error to connect server: `+ 3, 3)

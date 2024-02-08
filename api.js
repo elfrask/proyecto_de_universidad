@@ -6,7 +6,10 @@ let mail = require("nodemailer");
 let bp = require("body-parser");
 let cors = require("cors");
 let db = require("./db.js");
-let fs = require("fs")
+let fs = require("fs");
+let cron = require("node-cron");
+let handlebars = require("handlebars");
+let lodash = require("lodash");
 
 app.use(bp.json());
 app.use(cors())
@@ -45,13 +48,17 @@ function load(obj, file_json) {
 
 
 const configs = {
+    day: 1,
     loaded: true,
     email: "",
     token_mail: "",
     pass_mail: "",
     smtp:"",
+    dues_value: 100,
     // smtp:"smtp.mail.yahoo.com:465",
 }
+
+
 
 const admin_user = {
     user:"admin",
@@ -103,6 +110,35 @@ let sendmail = (subject, to, body) => {
     })
 }
 
+let sendmailHTML = (subject, to, template, datas) => {
+    let mailservice = mail.createTransport({
+        // host:configs.smtp.split(":")[0],
+        service: configs.smtp,
+        // port:parseInt(configs.smtp.split(":")[1]),
+        // url:configs.smtp,
+        auth:{
+            user: configs.email,
+            accessToken: configs.token_mail,
+            pass: configs.pass_mail
+            
+        },
+        
+    });
+    mailservice.sendMail({
+        from:configs.email,
+        to:to,
+        subject:subject,
+        html: handlebars.compile(template+"")(datas) 
+        
+    }, (err, res) => {
+        if (err) {
+            console.log("efe")
+            console.log(err)
+        }
+    })
+}
+
+
 async function authFunction(auth, callback, errorcall) {
     
     let user = {};
@@ -122,6 +158,84 @@ async function authFunction(auth, callback, errorcall) {
     return await errorcall(1)
 
 }
+
+
+
+async function dues_report() {
+    
+    let Students = await db.Student.find();
+
+    Students.forEach( async (student)=>{
+        
+        let dues = await db.Dues_Student.findOne({ci: student.ci});
+
+        let deuda = dues.dues;
+        let deuda_estado = dues.dues_state;
+
+        let context = {
+            name_student: student.name_student,
+            ci: student.ci,
+            periodo: "2023 - 2024"
+        }
+
+        let debe = false;
+
+        for (let i = 0; i < deuda.length; i++) {
+            const _deuda = deuda[i];
+            const _estado = deuda_estado[i];
+            
+            let due = "", state = "";
+
+            if (_estado === 1) {
+                due = "0";
+                state = "Pagado";
+            } else {
+                due = (configs.dues_value - _deuda) + "$";
+                state = "No pagado";
+                debe = true;
+            };
+
+            context["dues" + i] = due;
+            context["dues_state" + i] = state;
+        }
+
+        if (debe) {
+            
+            if (student.ci === 31496091) {
+                console.log("debe:", student, context);
+
+                sendmailHTML("Reporte de cuotas mensual", student.email, fs.readFileSync("template_dues.html", "utf-8"), context)
+                
+            }
+        }
+    })
+    
+
+}
+
+// dues_report()
+
+// console.log(
+//     handlebars.compile(fs.readFileSync("template_dues.html", "utf-8"))({
+//         dues0:"200",
+//         dues_state0:"pagado"
+//     })
+// )
+
+// 713755735951-3v4l81g9k3802d5lkaocl33lub3rfpat.apps.googleusercontent.com
+// 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
+// hsuq jucg asys nlwh
+
+cron.schedule("0 0 12 * * *", () => {
+    
+    let DD = new Date()
+    DD.setTime(Date.now())
+    
+    if ((configs.day+"") === (DD.getDate()+"")) {
+        
+    }
+    
+})
 
 
 app.post("/get_list", async (req, res) => {
@@ -154,6 +268,12 @@ app.post("/student/new", async (req, res) => {
     let data = await authFunction(auth, async () => {
         let notes = [0, 0, 0, 0, 0, 0, 0, 0, 0 ,0]
         
+        let exist = await db.Student.find({ci});
+
+        if (exist.length > 0) {
+            error = 10;
+            return {}
+        }
         
         let Student = new db.Student({
             ci,
@@ -167,14 +287,9 @@ app.post("/student/new", async (req, res) => {
             tlf:"",
             year_income:0
         })
-
-        try {
-            
-            Student.save();
-        } catch (error) {
-            error = 10;
-            return {}
-        }
+        
+        Student.save();
+        
 
         let Notes = new db.Notes({
             ci,
@@ -204,10 +319,90 @@ app.post("/student/new", async (req, res) => {
         data,
         error
     })
-})
+});
+
+app.post("/curso/new", async (req, res) => {
+    let {auth, id, title} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        
+        let exist = await db.Cursos.find({id});
+        let counts = await db.Cursos.find();
+
+        if (exist.length > 0) {
+            error = 10;
+            return {}
+        }
+        
+        let Curso = new db.Cursos({
+            id,
+            caption: title,
+            materias:[
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+            ],
+            index: counts.length
+        });
+
+        Curso.save();
+
+        return {};
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json({
+        data,
+        error
+    })
+});
+
+app.post("/cursos/edit", async (req, res) => {
+    let {auth, cursos} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        
+        let cur = [...cursos]
+
+        
+        for (let i = 0; i < cur.length; i++) {
+            const x = cur[i];
+            
+            let curso = await db.Cursos.findOne({id:x.id});
+            // console.log(x, curso)
+
+            if (curso !== null) {
+                curso.materias = x.materias;
+                curso.index = i;
+                curso.save();
+            }
+        }
+
+        return {};
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json({
+        data,
+        error
+    })
+});
 
 app.post("/student/edit", async (req, res) => {
-    let {auth, ci, student, dues, notes} = req.body;
+    let {auth, ci, student, dues, notes, dues_state} = req.body;
     let error = 0;
 
     console.log("editar")
@@ -222,8 +417,9 @@ app.post("/student/edit", async (req, res) => {
 
         asi(student_db, student);
         asi(notes_db, notes);
-        asi(dues_db, dues);
-
+        asi(dues_db, {dues, dues_state});
+        
+        // dues_db.dues = dues;
         student_db.save();
         notes_db.save();
         dues_db.save();
@@ -243,7 +439,65 @@ app.post("/student/edit", async (req, res) => {
         datas,
         error
     })
-})
+});
+
+app.post("/student/delete", async (req, res) => {
+    let {auth, ci} = req.body;
+    let error = 0;
+
+    console.log("eliminar:", ci)
+
+    let datas = await authFunction(auth, async () => {
+        
+        let student_db = await db.Student.findOne({ci});
+
+        if (null === student_db) {
+            error = 11;
+            return {}
+        };
+        await db.Student.deleteOne({ci});
+        await db.Notes.deleteOne({ci});
+        await db.Dues_Student.deleteOne({ci});
+
+        return {};
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json({
+        datas,
+        error
+    })
+});
+
+app.post("/curso/delete", async (req, res) => {
+    let {auth, curso} = req.body;
+    let error = 0;
+
+    console.log("eliminar:", curso)
+
+    let datas = await authFunction(auth, async () => {
+        
+        let curso_db = await db.Cursos.findOne({id: curso});
+
+        if (null === curso_db) {
+            error = 11;
+            return {}
+        };
+        await db.Cursos.deleteOne({id: curso});
+
+        return {};
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json({
+        datas,
+        error
+    })
+});
 
 app.post("/student/get", async (req, res) => {
     let {auth, ci} = req.body;
@@ -274,7 +528,39 @@ app.post("/student/get", async (req, res) => {
         data,
         error
     })
-})
+});
+
+app.post("/cursos/get", async (req, res) => {
+    let {auth, curso} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        let datas = {
+            cursos: {}
+        }
+        let s = {}
+        if (curso) {
+            s = {curso}
+        }
+        let cur = await db.Cursos.find(s);
+
+
+        let cur2 = lodash.sortBy(cur, "index");
+        datas.cursos = cur2;
+        return datas;
+    },  (async (e) => {
+        error = e;
+        return {
+            cursos: {},
+        };
+    }))
+
+    res.json({
+        data,
+        error
+    })
+});
+
 app.post("/connect", async (req, res) => {
     let {auth} = req.body;
     let error = 0;
@@ -335,6 +621,29 @@ app.post("/sendmail", async (req, res) => {
     let data = await authFunction(auth, async () => {
         
         sendmail(subject, to, body)
+
+        return {};
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json(
+        {
+            error,
+            data
+        }
+    )
+})
+
+app.post("/duesreport", async (req, res) => {
+    let {auth} = req.body;
+    let error = 0;
+    
+
+    let data = await authFunction(auth, async () => {
+        
+        dues_report();
 
         return {};
     },  (async (e) => {

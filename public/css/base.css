@@ -214,6 +214,7 @@ html {
     display: flex;
     justify-content: center;
     text-align: center;
+    align-items: center;
 }
 
 .Controlbutton {
@@ -252,6 +253,7 @@ html {
 .login {
     width: 300px;
     padding: 10px;
+    height: max-content;
 }
 
 .button {
@@ -417,8 +419,10 @@ html {
     width: -webkit-fill-available;
     border-radius: 0px;
     background-color: transparent;
+    background-color: var(--bg-object);
     height: 100%;
-    margin-right: 10px;
+    padding: 10px;
+    /* margin-right: 10px; */
 }
 
 .conf-box input {
@@ -426,7 +430,7 @@ html {
     height: 100%;
     width: -webkit-fill-available;
     border: none;
-    background-color: transparent;
+    background-color: var(--bg-object);
     padding: 10px;
 }
 
@@ -493,6 +497,8 @@ html {
                 font-weight: bold;
             }
             ._field {
+                display: flex;
+                flex-wrap: nowrap;
                 float: left;
                 width: calc(100% - var(--size));
                 box-sizing: border-box;
@@ -506,6 +512,10 @@ html {
                     height: 100%;
                     padding: 10px;
                     background-color: transparent;
+                }
+
+                & input[type="button"]:hover {
+                    background-color: rgba(133, 133, 133, 0.2);
                 }
 
                 

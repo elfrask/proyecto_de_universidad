@@ -32,18 +32,17 @@ class App extends React.Component {
                     <div className="top1">
                         <ControlButton img="/img/gui/add.svg" click={() => {
 
-
+                            console.log("hi")
                             openWin("/add_student.html", {
                                 width:"400",
-                                height:"300",
+                                height:"250",
                                 resizable:"no",
                                 menubar:"no"
                             }, {
-                                host: x.host,
-                                done: () => {
+                                done: (win) => {
 
                                     
-
+                                    win.close();
                                     document.location.reload();
                                 }
                             })
@@ -141,7 +140,10 @@ class App extends React.Component {
                         items = {items}
                         states = {test_dates.states}
                         dbclick ={(e) => {
-                            openWin("/student.html", {}, {id: e.ci})
+                            openWin("/student.html", {}, {
+                                id: e.ci,
+                                parent: window
+                            })
                         }}
 
                     />

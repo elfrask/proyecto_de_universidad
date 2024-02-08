@@ -1,4 +1,4 @@
-let remote = require("@electron/remote")
+
 
 let exitcode = 0;
 
@@ -18,22 +18,12 @@ window.addEventListener("beforeunload", (evento) => {
 let data = {
     sections:[
         gen_date("Sistema de reporte de cuotas", "email"),
-        gen_date("Administrar plantilla", "admin")
+        gen_date("Administrar plantilla", "admin"),
+        gen_date("Cursos y secciones", "cursos"),
     ]
 }
 
 
-function preventDefaultClose() {
-    let result = remote.dialog.showMessageBoxSync({
-        title: "Alerta de perdida de datos",
-        message: "Los datos no se han guardado, ¿deseas salir?",
-        buttons: ["Salir", "No Salir"]
-    })
-    
-    console.log(result)
-
-    return result
-}
 
 class Conf extends React.Component {
     state = {
@@ -66,7 +56,7 @@ class Conf extends React.Component {
                         <span>
                             Reportar cuotas automáticamente los Dias
                         </span>
-                        <select defaultValue={1} className="select-gui">
+                        <select defaultValue={this.state.day} type_value="number" className="select-gui" name="conf" idpx="day">
                             {
                                 range(1, 29).map(x=> {
                                     return(
@@ -102,6 +92,27 @@ class Conf extends React.Component {
                         </span>
                         <input type="text" name="conf"  placeholder="gmail | hotmail | yahoo" idpx="smtp" defaultValue={this.state.smtp}/>
                     </div>
+                    <div className="conf-box">
+                        <span>
+                            Hacer reporte manualmente:
+                        </span>
+                        <input type="button"  value={"Hacer reporte"} onClick={() => {
+                            let result = remote.dialog.showMessageBoxSync(null, {
+                                title:"Hacer reporte",
+                                message:"¿Seguro que quieres hacer el reporte de notas manualmente?",
+                                buttons: [
+                                    "No, Cancelar",
+                                    "Si, Realizar reporte", 
+                                ]
+                            });
+
+                            console.log(result);
+
+                            if (result) {
+                                MyServer.duesreport();
+                            }
+                        }}/>
+                    </div>
                     
                     <br />
                     <br />
@@ -126,6 +137,24 @@ class Conf extends React.Component {
                     <h4>
                         se esta trabajando por un sistema de usuarios con claves y accesos
                     </h4>
+                </section>
+                <section id="cursos">
+                    <h2>
+                        Cursos y secciones
+                    </h2>
+                    
+                    <div className="conf-box">
+                        <span>
+                            Configurar materias:
+                        </span>
+                        <input type="button"  value={"Abrir"} onClick={() => {
+                            openWin("/cursos.html", {
+
+                            }, {
+                                
+                            })
+                        }}/>
+                    </div>
                 </section>
                 
             </div>
@@ -160,22 +189,26 @@ class App extends React.Component {
                         
 
                         <ControlButton img="/img/gui/save.svg" click={() => {
-                            let confs = document.getElementsByName("conf");
+                            // let confs = document.getElementsByName("conf");
 
-                            let out = [];
+                            // let out = [];
 
-                            for (let i = 0; i < confs.length; i++) {
-                                const element = confs[i];
-                                out.push(element)
-                            };
+                            // for (let i = 0; i < confs.length; i++) {
+                            //     const element = confs[i];
+                            //     out.push(element)
+                            // };
 
-                            let data = {}
+                            // let data = {}
 
-                            out.forEach(x=> {
-                                let a = (x.attributes.idpx||{}).value
-                                data[a] = x.value; 
-                            })
+                            // out.forEach(x=> {
+                            //     let a = (x.attributes.idpx||{}).value
+                            //     data[a] = x.value; 
+                            // })
                             
+                            // console.log(data)
+
+                            let data = parseForm("conf", "idpx");
+
                             console.log(data)
 
                             try {
