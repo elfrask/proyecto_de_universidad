@@ -137,7 +137,7 @@ class App extends React.Component {
                                 
                             }
                         }}>
-                            Eliminar curso
+                            Eliminar usuario
                         </ControlButton>
 
 
@@ -227,6 +227,31 @@ class App extends React.Component {
                                                 }
                                             />
                                             <FieldTable 
+                                                title={"Estudiante, puede:"}
+                                                field={
+                                                    
+                                                    <select
+                                                        defaultValue={user.permisos.students}
+                                                        onChange={(e) => {
+                                                            let value = e.target.value;
+                                                            user.permisos.students = Number(value)
+                                                        }}
+                                                    >
+                                                        {
+                                                            ["Solo lectura", "Lectura y escritura"].map((y, ii)=>{
+        
+                                                                return(
+                                                                    <option value={ii}>
+                                                                        {y}
+                                                                    </option>
+                                                                )
+                                                            })
+                                                        }
+                                                    </select>
+                                                    
+                                                }
+                                            />
+                                            <FieldTable 
                                                 title={"Notas, puede:"}
                                                 field={
                                                     
@@ -281,14 +306,14 @@ class App extends React.Component {
                                                 field={
                                                     
                                                     <select
-                                                        defaultValue={user.permisos.dues}
+                                                        defaultValue={user.permisos.configs}
                                                         onChange={(e) => {
                                                             let value = e.target.value;
-                                                            user.permisos.dues = Number(value)
+                                                            user.permisos.configs = Number(value)
                                                         }}
                                                     >
                                                         {
-                                                            ["No", "Si"].map((y, ii)=>{
+                                                            ["No (Recomendado)", "Si"].map((y, ii)=>{
         
                                                                 return(
                                                                     <option value={ii}>

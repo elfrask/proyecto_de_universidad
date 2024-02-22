@@ -1,6 +1,6 @@
 let express = require("express");
 let app = express.Router();
-let mysql = require("mysql");
+// let mysql = require("mysql");
 let datas = require("./datas.json");
 let mail = require("nodemailer");
 let bp = require("body-parser");
@@ -19,11 +19,11 @@ app.use(cors())
 require("dotenv").config();
 
 
-mysql.createConnection({
-    host:"localhost",
-    password:"carlos12",
-    user:"root"
-})
+// mysql.createConnection({
+//     host:"localhost",
+//     password:"carlos12",
+//     user:"root"
+// })
 
 
 function load(obj, file_json) {
@@ -65,6 +65,18 @@ const admin_user = {
     pass:"admin"
 }
 
+const ModelAccount = (user="", pass="") => ({
+    user,
+    pass,
+    permisos:{
+        students: 0,
+        dues: 0,
+        notes: 0,
+        configs: 0,
+    },
+    root: false
+})
+
 const accounts = [];
 
 if (!fs.existsSync("conf")) {
@@ -76,6 +88,12 @@ load(configs, "conf/configs_server.json");
 load(admin_user, "conf/root.json")
 
 admin_user.root = true;
+admin_user.permisos = {
+    students: 1,
+    dues: 2,
+    notes: 2,
+    configs: 1,
+}
 
 // accounts.push(admin_user)
 
@@ -149,7 +167,7 @@ async function authFunction(auth, callback, errorcall) {
     if (user.user) {
 
         if (user.pass === auth.pass) {
-            return await callback()
+            return await callback(user)
         };
 
         return await errorcall(2)
@@ -202,9 +220,9 @@ async function dues_report() {
         if (debe) {
             
             if (student.ci === 31496091) {
+                sendmailHTML("Reporte de cuotas mensual", student.email, fs.readFileSync("template_dues.html", "utf-8"), context)
                 console.log("debe:", student, context);
 
-                sendmailHTML("Reporte de cuotas mensual", student.email, fs.readFileSync("template_dues.html", "utf-8"), context)
                 
             }
         }
@@ -235,7 +253,7 @@ cron.schedule("0 0 12 * * *", () => {
         
     }
     
-})
+});
 
 
 app.post("/get_list", async (req, res) => {
@@ -578,17 +596,7 @@ app.post("/account/new", async (req, res) => {
             return[];
         };
 
-        accounts.push({
-            user,
-            pass,
-            permisos:{
-                students: 0,
-                dues: 0,
-                notes: 0,
-                configs: 0,
-            },
-            root: false
-        })
+        accounts.push(ModelAccount(user, pass))
 
         accounts.save();
 
@@ -759,7 +767,7 @@ app.post("/sendmail", async (req, res) => {
             data
         }
     )
-})
+});
 
 app.post("/duesreport", async (req, res) => {
     let {auth} = req.body;
@@ -771,6 +779,30 @@ app.post("/duesreport", async (req, res) => {
         dues_report();
 
         return {};
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json(
+        {
+            error,
+            data
+        }
+    )
+});
+
+app.post("/account/me", async (req, res) => {
+    let {auth} = req.body;
+    let error = 0;
+    
+
+    let data = await authFunction(auth, async (user) => {
+        
+        let user_data = JSON.parse(JSON.stringify(user));
+        user_data.pass = undefined;
+
+        return user_data;
     },  (async (e) => {
         error = e;
         return {};

@@ -62,11 +62,24 @@ let test_alumno = {
 }
 
 let GRUPOS = []
+
+let MyAccount = {
+    user:"",
+    permisos:{
+        students: 0,
+        dues: 0,
+        notes: 0,
+        configs: 0,
+    },
+    root: false
+}
+
 try {
     
     GRUPOS = MyServer.get_cursos().data.cursos.map(x=> {
         return gen_date(x.caption, x.id)
     });
+    MyAccount = MyServer.me_account().data;
 } catch (error) {
     
 }

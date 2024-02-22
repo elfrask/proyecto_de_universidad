@@ -323,15 +323,30 @@ html {
     transition: 0.4s;
     overflow: hidden;
     width: 200px;
-    height: calc(200px + 30px);
+    height: max-content;
     border-radius: 20px;
-    cursor: pointer;
+    /* cursor: pointer; */
     float: left;
     margin: 10px;
 }
 
+
 .db-card:hover {
     background-color: #bbb;
+}
+
+.db-card-top {
+    float: right;
+    padding: 10px;
+    /* padding-right: 20px; */
+    margin-right: 10px;
+    transition: 0.4s;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.db-card-top:hover {
+    background-color: var(--bg-object-hover);
 }
 
 .db-card-img {
@@ -344,6 +359,8 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 .list-dbs {

@@ -648,7 +648,10 @@ class Dbcard extends React.Component {
     render() {
 
         return(
-            <div className="db-card" onClick={genlink(this.props.click)}>
+            <div className="db-card" onDoubleClick={genlink(this.props.click)}>
+                <div className="db-card-top" onClick={genlink(this.props.deleteclick)}>
+                    <Img img="/img/gui/delete.svg" size="24px" />
+                </div>
                 <div className="db-card-img img" style={{backgroundImage:`url(${this.props.img})`}}>
                 </div>
                 <div className="db-card-title">
@@ -727,6 +730,14 @@ function debug(e) {
     return e
 }
 
+function eif(cond, True, False) {
+
+    if (cond) {
+        return True;
+    };
+
+    return False;
+}
 
 function server(host, user, pass) {
     host = (host||"") + "/api"
@@ -834,6 +845,20 @@ function server(host, user, pass) {
             try {
                 
                 return load.post(host + "/accounts/get", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    }
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        me_account:() => {
+            try {
+                
+                return load.post(host + "/account/me", {
                     auth:{
                         user:me.user,
                         pass:me.pass

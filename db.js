@@ -2,7 +2,7 @@ let {Schema, model, connect: dbconn} = require("mongoose");
 require("dotenv").config();
 
 
-dbconn("mongodb://127.0.0.1/cst-gestor");
+dbconn(process.env.DBURI);
 
 let ci = {
     unique: true,

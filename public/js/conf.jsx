@@ -70,6 +70,12 @@ class Conf extends React.Component {
                     </div>
                     <div className="conf-box">
                         <span>
+                            Valor de las cuotas
+                        </span>
+                        <input type="number" type_value="number" placeholder="Correo o usuario" name="conf" idpx="dues_value" defaultValue={this.state.dues_value}/>
+                    </div>
+                    <div className="conf-box">
+                        <span>
                             Correo Emisor
                         </span>
                         <input type="text"  placeholder="Correo o usuario" name="conf" idpx="email" defaultValue={this.state.email}/>
@@ -122,12 +128,6 @@ class Conf extends React.Component {
                     <h2>
                         Credenciales y acceso
                     </h2>
-                    {/* <div className="conf-box">
-                        <span>
-                            Usuario de acceso
-                        </span>
-                        <input type="text"  placeholder="Usuario" idp="user" defaultValue={"admin"}/>
-                    </div> */}
                     <div className="conf-box">
                         <span>
                             Cambiar Contraseña
@@ -204,23 +204,7 @@ class App extends React.Component {
                         
 
                         <ControlButton img="/img/gui/save.svg" click={() => {
-                            // let confs = document.getElementsByName("conf");
-
-                            // let out = [];
-
-                            // for (let i = 0; i < confs.length; i++) {
-                            //     const element = confs[i];
-                            //     out.push(element)
-                            // };
-
-                            // let data = {}
-
-                            // out.forEach(x=> {
-                            //     let a = (x.attributes.idpx||{}).value
-                            //     data[a] = x.value; 
-                            // })
-                            
-                            // console.log(data)
+                           
 
                             let data = parseForm("conf", "idpx");
 

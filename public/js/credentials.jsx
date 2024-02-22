@@ -15,6 +15,13 @@ class App extends React.Component {
                 <div className="medio fill">
 
                     <div className="login">
+                        <input type="text" placeholder="Host" disabled className="input" 
+                        defaultValue={subapi.host}
+                        style={{
+                            width:"100%"
+                        }}/>
+                        <br />
+                        <br />
                         <input type="text" id="user" placeholder="Usuario" className="input" style={{
                             width:"100%"
                         }}/>
