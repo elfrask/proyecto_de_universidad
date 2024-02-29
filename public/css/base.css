@@ -1,7 +1,11 @@
 
 :root {
-    --bg-object: rgb(128, 128, 128, 0.2);
-    --bg-object-hover: rgb(128, 128, 128, 0.4);
+    /* --bg-object: rgb(128, 128, 128, 0.2);
+    --bg-object-hover: rgb(128, 128, 128, 0.4); */
+    --bg-object: rgba(255, 255, 255, 0.1);
+    --bg-object-hover: rgba(255, 255, 255, 0.2);
+    /* --domain-color: rgb(0, 105, 190); */
+    --domain-color: rgb(29, 124, 0);
     --fill: "-webkit-fill-available"
 }
 
@@ -9,7 +13,7 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-
+    color: white;
 }
 
 
@@ -18,7 +22,7 @@
     width: 15px;
     height: 15px;
     padding: 3px;
-    background-color: ghostwhite;
+    background-color: #222;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -31,6 +35,7 @@ body, html {
     height: 100%;
     width: 100%;
     overflow: auto;
+    background-color: #111;
 }
 
 html {
@@ -47,7 +52,17 @@ html {
     padding: 10px;
     width: 100%;
     height: 120px;
-    background-color: lawngreen;
+    background-color: rgb(0, 0, 0);
+}
+
+
+
+.img {
+    
+}
+
+.invert {
+    filter: invert();
 }
 
 .header.one-top {
@@ -69,7 +84,7 @@ html {
     width: 100%;
     height: 100%;
     /* border-radius: 10px; */
-    background-color: rgb(218, 234, 236);
+    background-color: rgb(39, 39, 39);
     overflow: hidden;
 }
 
@@ -94,7 +109,7 @@ html {
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
-    background-color: rgb(191, 206, 207);    
+    background-color: rgb(44, 44, 44);    
 }
 
 .table-sub-body {
@@ -125,7 +140,7 @@ html {
 }
 
 .table-head-date:hover {
-    background-color: rgb(209, 234, 255);
+    background-color: var(--domain-color);
 }
 
 .table-body-date {
@@ -151,7 +166,7 @@ html {
 }
 
 .table-body-row-date:hover {
-    background-color: rgb(209, 234, 255);
+    background-color: var(--domain-color);
 }
 
 .select-gui {
@@ -173,7 +188,12 @@ html {
     padding: 10px;
     border: none;
     border-radius: 10px;
-    background-color: var(--bg-object);  
+    background-color: var(--bg-object);
+
+    /* & option {
+        color: white;
+        background: rgba(0, 0, 0);
+    } */
 }
 
 .top1, .top2 {
@@ -222,7 +242,7 @@ html {
     height: 50px;
     width: max-content;
     cursor: pointer;
-    background-color: var(--bg-object);
+    /* background-color: var(--bg-object); */
     transition: 0.4s;    
     float: left;
 }
@@ -247,7 +267,8 @@ html {
 
 
 .Controlbutton:hover {
- background-color: var(--bg-object-hover);
+ /* background-color: var(--bg-object); */
+ background-color: var(--domain-color);
 }
 
 .login {
@@ -319,7 +340,7 @@ html {
 }
 
 .db-card {
-    background-color: #ddd;
+    background-color: var(--bg-object);
     transition: 0.4s;
     overflow: hidden;
     width: 200px;
@@ -332,7 +353,7 @@ html {
 
 
 .db-card:hover {
-    background-color: #bbb;
+    background-color: var(--bg-object-hover);
 }
 
 .db-card-top {
@@ -366,7 +387,7 @@ html {
 .list-dbs {
 
     background-color: var(--bg-object);
-    background-image: url("/img/gui/bg.jpg");
+    /* background-image: url("/img/gui/bg.jpg"); */
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -394,7 +415,7 @@ html {
 }
 
 .body-banner-button:hover {
-    background-color: var(--bg-object);
+    background-color: var(--domain-color);
 
 }
 
@@ -440,6 +461,10 @@ html {
     height: 100%;
     padding: 10px;
     /* margin-right: 10px; */
+
+    & option {
+        background: rgb(0, 0, 0);
+    }
 }
 
 .conf-box input {
@@ -474,11 +499,11 @@ html {
     height: max-content;
     border-radius: 10px;
     overflow: hidden;
-    background-color: #bbb;
+    background-color: var(--bg-object);
     margin: 10px;
 
     ._head {
-        background-color: dodgerblue;
+        background-color: var(--domain-color);
         color: white;
         width: 100%;
         height: 50px;
@@ -490,7 +515,7 @@ html {
     }
 
     ._body {
-        background-color: rgb(185, 185, 185);
+        /* background-color: var(--bg-object); */
 
 
         .field {
@@ -520,7 +545,8 @@ html {
                 width: calc(100% - var(--size));
                 box-sizing: border-box;
                 height: 100%;
-                background-color: #ddd;
+                /* background-color: #ddd; */
+                background-color: var(--bg-object);
                 /* background-color: greenyellow; */
 
                 & input, select {
@@ -529,6 +555,21 @@ html {
                     height: 100%;
                     padding: 10px;
                     background-color: transparent;
+                }
+
+                *:disabled {
+                    color: gray;
+                }
+
+                & select {
+                    /* background-color: rgba(0, 0, 0, 0.01); */
+                    /* background-color: #444; */
+                    color: auto;
+
+                    & option {
+                        background: rgb(32, 32, 32);
+                        color: white;
+                    }
                 }
 
                 & input[type="button"]:hover {
@@ -556,4 +597,20 @@ input, select {
 input:focus, select:focus {
     outline: none;
     border: none;
+}
+/* 
+select {
+    background-color: #222;
+    color: auto;
+} */
+/* select 
+& option {
+    color: white;
+    background: rgba(0, 0, 0);
+} 
+*/
+
+.optionbg {
+    color: white;
+    background: rgba(0, 0, 0);
 }

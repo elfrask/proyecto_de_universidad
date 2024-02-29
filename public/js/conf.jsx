@@ -189,7 +189,7 @@ class App extends React.Component {
 
         return(
             <div className="marco">
-                <div className="header">
+                <div className="header one-top">
                     <div className="top1">
                         <ControlButton img="/img/gui/close.svg" click={() => {
                             close()
@@ -225,7 +225,7 @@ class App extends React.Component {
                         
                         
                     </div>
-                    <div className="top2">
+                    {/* <div className="top2">
                         
                         <div style={{float:"left", width:"6px", height:"50px"}}></div>
                         <div className="search"  style={{width:"-webkit-fill-available"}}>
@@ -249,11 +249,11 @@ class App extends React.Component {
                             </select>
 
                         </div>
-                    </div>
+                    </div> */}
                                         
                     
                 </div>
-                <div className="body">
+                <div className="body one-top">
                     <div className="body-banner">
                         {
                             data.sections.map(x=> {

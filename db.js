@@ -1,6 +1,8 @@
 let {Schema, model, connect: dbconn} = require("mongoose");
 require("dotenv").config();
 
+let DUES_TEMPLATE = [Number, Number, Number, Number, Number, Number, Number, Number, Number, Number, Number, Number]
+
 
 dbconn(process.env.DBURI);
 
@@ -22,8 +24,11 @@ let Student = new Schema({
     name_parent: String,
     tlf: String,
     year_income: Number,
-    gender: Number
-
+    gender: Number,
+    dues: {
+        type: Array,
+        default: null
+    }
 });
 
 // el periodo representa el año escolar expresado como el año que dura mas tiempo en el periodo entre septiembre a agosto
@@ -37,12 +42,11 @@ let Notes = new Schema({
     lapse2: NOTAS,
     period: Number,
 })
-
 let Dues_Student = new Schema({
     ci,
     // dues es la deudas de los pagos de los periodos que duran 1 año equivalente a 12 meses
-    dues: [Number, Number, Number, Number, Number, Number, Number, Number, Number, Number, Number, Number],
-    dues_state: [Number, Number, Number, Number, Number, Number, Number, Number, Number, Number, Number, Number],
+    dues: DUES_TEMPLATE,
+    dues_state: DUES_TEMPLATE,
     period: Number,
 })
 

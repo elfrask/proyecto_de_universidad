@@ -430,9 +430,9 @@ class ControlButton extends React.Component { // style, className, img, click, s
                 }, this.props.style)}
                 onClick={genlink(this.props.click)}
             >
-                <div className="img" style={{
+                <div className="img invert" style={{
                     backgroundImage:`url('${this.props.img}')`,
-
+                    backgroundSize:"50%"
                 }}>
 
                 </div>
@@ -521,7 +521,8 @@ class Table extends React.Component { // id, dates, items, states, dbclick
         id:"",
         dates:[],
         items:[],
-        states:[]
+        states:[],
+        filter:(element) => true
     }
 
     state = {
@@ -580,6 +581,8 @@ class Table extends React.Component { // id, dates, items, states, dbclick
             items = items.reverse()
         }
 
+        items = items.filter(genlink(this.props.filter||(() => true)))
+
         return(
             <div className="table">
                 <div className="sub-table"
@@ -624,6 +627,7 @@ class Table extends React.Component { // id, dates, items, states, dbclick
                                             sizes={this.state.sizes} 
                                             states={this.state.states}
                                             dbclick={this.props.dbclick}
+                                            // filter={this.props.filter}
                                         ></TableBodyRowDate>
                                     )
                                 })
@@ -650,7 +654,7 @@ class Dbcard extends React.Component {
         return(
             <div className="db-card" onDoubleClick={genlink(this.props.click)}>
                 <div className="db-card-top" onClick={genlink(this.props.deleteclick)}>
-                    <Img img="/img/gui/delete.svg" size="24px" />
+                    <Img img="/img/gui/delete.svg" size="24px" className="invert" />
                 </div>
                 <div className="db-card-img img" style={{backgroundImage:`url(${this.props.img})`}}>
                 </div>

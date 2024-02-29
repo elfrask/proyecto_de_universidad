@@ -17,6 +17,12 @@ class App extends React.Component {
 
             if (["all", "none"].includes(this.state.curso)) return true;
 
+            if (this.state.curso === "duesonly") {
+                
+                return [...x.dues].includes(0)
+                
+            }
+
             return x.curso === this.state.curso
         })
 
@@ -25,6 +31,7 @@ class App extends React.Component {
 
             return (x[this.state.filter] + "").toUpperCase().includes(this.state.search.toUpperCase())
         })
+        
 
         return (
             <div className="marco">
@@ -92,14 +99,18 @@ class App extends React.Component {
                                 curso
                             })
                         }}>
-                            <option value={this.state.curso} className="select-gui-option">
+                            <option value={this.state.curso} className="select-gui-option optionbg">
                                 Selecciona un grupo o sección
                             </option>
+                            <option value={"duesonly"} className="select-gui-option optionbg">
+                                Solo deudores
+                            </option>
+                            
                             {
                                 test_dates.groups.map(x => {
 
                                     return (
-                                        <option value={x.id} className="select-gui-option">
+                                        <option value={x.id} className="select-gui-option optionbg">
                                             {x.caption}
                                         </option>
                                     )
@@ -157,6 +168,7 @@ class App extends React.Component {
                                 parent: window
                             })
                         }}
+                        
 
                     />
                 </div>

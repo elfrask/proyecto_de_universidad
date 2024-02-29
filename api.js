@@ -225,6 +225,7 @@ async function dues_report() {
 
                 
             }
+            
         }
     })
     
@@ -255,6 +256,9 @@ cron.schedule("0 0 12 * * *", () => {
     
 });
 
+function copy(c) {
+    return JSON.parse(JSON.stringify(c))
+}
 
 app.post("/get_list", async (req, res) => {
 
@@ -264,6 +268,17 @@ app.post("/get_list", async (req, res) => {
     let results = await authFunction(auth, async () => {
 
         let datas = await db.Student.find();
+
+        let datas2 = await Promise.all(datas.map(async (x) => {
+            // let out = copy(x)
+            let dues = await db.Dues_Student.findOne({ci: x.ci})
+            // let dues = await db.Dues_Student.find({ci: x.ci})
+            // console.log(dues)
+            x.dues = dues.dues_state;
+            return x
+        }))
+
+        console.log(datas2)
 
         return datas;
     },  (async (e) => {

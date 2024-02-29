@@ -432,7 +432,7 @@ class App extends React.Component {
                                                                             ["No pagado", "Pagado"].map((y, ii) => {
 
                                                                                 return (
-                                                                                    <option value={ii}>
+                                                                                    <option className="optionbg" value={ii}>
                                                                                         {y}
                                                                                     </option>
                                                                                 )

@@ -85,6 +85,11 @@ try {
 }
 
 
+
+
+
+
+
 let test_dates = {
     dates:[
         gen_date("Nombre y Apellido del alumno", "name_student"),
@@ -187,7 +192,7 @@ let test_dates = {
     }
 }
 
-test_dates.items = MyServer.get_list(0, 10).data;
+test_dates.items = MyServer.get_list(0, 10000).data;
 // let items = MyServer.get_list(0, 10);
 
 // console.log(items)
