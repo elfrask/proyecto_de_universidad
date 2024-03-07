@@ -565,7 +565,7 @@ class Table extends React.Component { // id, dates, items, states, dbclick
 
             
             this.setState({sizes: tables[this.props.id], table_visible: true, states:out})
-        }, 100)
+        }, 500)
     }
 
     render() {
@@ -653,7 +653,7 @@ class Dbcard extends React.Component {
 
         return(
             <div className="db-card" onDoubleClick={genlink(this.props.click)}>
-                <div className="db-card-top" onClick={genlink(this.props.deleteclick)}>
+                <div className="db-card-top delete" onClick={genlink(this.props.deleteclick)}>
                     <Img img="/img/gui/delete.svg" size="24px" className="invert" />
                 </div>
                 <div className="db-card-img img" style={{backgroundImage:`url(${this.props.img})`}}>

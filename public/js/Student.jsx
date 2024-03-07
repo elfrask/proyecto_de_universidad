@@ -170,7 +170,7 @@ class App extends React.Component {
                         {
                             eif(
                                 MyAccount.permisos.students === 1,
-                                <ControlButton img="/img/gui/delete.svg" click={() => {
+                                <ControlButton img="/img/gui/delete.svg" className="delete" click={() => {
 
                                     let result = remote.dialog.showMessageBoxSync(null, {
                                         title: "Eliminar",

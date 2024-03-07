@@ -105,7 +105,7 @@ class App extends React.Component {
                         }}>
                             Agregar Usuario
                         </ControlButton>
-                        <ControlButton img="/img/gui/delete.svg" click={() => {
+                        <ControlButton img="/img/gui/delete.svg" className="delete" click={() => {
                             if (this.state.user === "none") {
                                 msg("Debe de seleccionar un curso primero", "Curso no seleccionado");
                                 return false

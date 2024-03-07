@@ -1,32 +1,170 @@
 
-:root {
-    /* --bg-object: rgb(128, 128, 128, 0.2);
-    --bg-object-hover: rgb(128, 128, 128, 0.4); */
+@font-face {
+    font-family: "opensans";
+    src: url("/fonts/opensans/OpenSans-Regular.ttf");
+}
+
+@font-face {
+    font-family: "rubik";
+    src: url("/fonts/rubik/Rubik-Regular.ttf");
+}
+
+/* DARK THEME */
+
+/* :root {
     --bg-object: rgba(255, 255, 255, 0.1);
     --bg-object-hover: rgba(255, 255, 255, 0.2);
-    /* --domain-color: rgb(0, 105, 190); */
     --domain-color: rgb(29, 124, 0);
-    --fill: "-webkit-fill-available"
+    --header-color: rgb(0, 0, 0);
+} */
+
+.invert {
+    filter: invert();
+}
+
+/* DARK THEME - DOMAIN BLUE */
+
+
+
+@media (prefers-color-scheme: dark) {
+
+    :root {
+        --bg-object: rgba(255, 255, 255, 0.1);
+        --bg-object-hover: rgba(255, 255, 255, 0.2);
+        --domain-color: rgb(0, 62, 177);
+        --header-color: black;
+        --header-color-font: rgb(255, 255, 255);
+        --header-color-placeholder: gray;
+        --header-invert: 1;
+        --bg-option: rgb(32, 32, 32);
+        --font-option: rgb(231, 231, 231);
+        --bg-app: rgb(0, 0, 0);
+        --banner-color: rgb(0, 0, 0);
+        --banner-font-color: rgb(255, 255, 255);
+        --banner-invert: 1;
+        --body-out-banner-color: rgb(20, 20, 20);
+        --bg-out-banner-color: rgb(0, 0, 0);
+        --font-color: white;
+        --back-table-color: rgb(0, 0, 0);
+        --bg-form-box: rgb(0, 0, 0);
+        --font-form-box: rgb(255, 255, 255);
+        --bg-controls: rgb(20, 20, 20);
+        --bg-controls-hover: rgba(255, 255, 255, 0.2);
+        --disabled: gray;
+        --form-table-color: rgb(20, 20, 20);
+        --scroll-color: #111;
+        --scroll-color-thump: gray;
+        --spacing: 0;
+        /* --spacing: 1; */
+    }
+
+    /* rgb(23, 65, 42) */
+
+    /* MONOCOLOR MODE */
+
+    /* :root {
+        --monocolor-domain: rgb(21, 54, 36); 
+
+        --header-color: var(--monocolor-domain);
+        --banner-color: var(--monocolor-domain);
+        --bg-out-banner-color: var(--monocolor-domain);
+
+        --bg-controls: rgb(9, 66, 35);
+        --spacing: 1;
+        --body-out-banner-color: rgb(0, 0, 0);
+
+
+    } */
+
+}
+
+@media (prefers-color-scheme: light) {
+
+    :root {
+        --bg-object: rgba(0, 0, 0, 0.2);
+        --bg-object-hover: rgba(0, 0, 0, 0.4);
+        --domain-color: rgb(97, 152, 255);
+        --header-color: rgb(116, 10, 158);
+        --header-color-font: rgb(255, 255, 255);
+        --header-color-placeholder: rgb(189, 189, 189);
+        --header-invert: 1;
+        --bg-option: rgb(231, 231, 231);
+        --font-option: rgba(0, 0, 0, 1);
+        --bg-app: rgb(202, 208, 238);
+        --banner-color: rgb(116, 10, 158);
+        --banner-font-color: rgb(255, 255, 255);
+        --banner-invert: 1;
+        --body-out-banner-color: rgb(255, 255, 255);
+        --bg-out-banner-color: rgb(116, 10, 158);
+        --font-color: black;
+        --bg-controls: rgb(167, 190, 255);
+        --bg-controls-hover: rgb(45, 236, 131);
+        --back-table-color: rgb(18, 90, 74);
+        --bg-form-box: rgb(255, 255, 255);
+        --font-form-box: rgb(0,0,0);
+        --disabled: rgb(71, 71, 71);
+        --form-table-color: rgb(238, 238, 238);
+        --scroll-color: #d8d8d8;
+        --scroll-color-thump: gray;
+        --spacing: 1;
+    }
+
+    /* MONOCOLOR MODE */
+
+    :root {
+        --monocolor-domain: rgb(10, 158, 109); 
+
+        --header-color: var(--monocolor-domain);
+        --banner-color: var(--monocolor-domain);
+        --bg-out-banner-color: var(--monocolor-domain);
+
+        --bg-controls-hover: rgb(1, 165, 89);
+
+    }
+
+    .invert {
+        filter: invert(0);
+    }
+}
+
+
+/* CUSTOM THEME */
+
+/* :root {
+    --bg-object: rgba(255, 255, 255, 0.1);
+    --bg-object-hover: rgba(255, 255, 255, 0.2);
+    --domain-color: rgb(29, 124, 0);
+    --header-color: rgb(134, 73, 170);
+} */
+
+
+
+:root {
+    --fill: "-webkit-fill-available";
+
 }
 
 * {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-    color: white;
+    color: var(--font-color);
+    font-family: "opensans";
 }
 
-
+h1, h2, h3, h4 {
+    font-family: "opensans";
+}
 
 *::-webkit-scrollbar {
     width: 15px;
     height: 15px;
     padding: 3px;
-    background-color: #222;
+    background-color: var(--scroll-color);
 }
 
 *::-webkit-scrollbar-thumb {
-    background-color: gray;
+    background-color: var(--scroll-color-thump);
     width: 15px;
     border-radius: 7px;
 }
@@ -35,12 +173,14 @@ body, html {
     height: 100%;
     width: 100%;
     overflow: auto;
-    background-color: #111;
+    background-color: var(--bg-app);
 }
 
 html {
     overflow: hidden;
 }
+
+
 
 .marco {
     
@@ -49,21 +189,39 @@ html {
 }
 
 .header {
-    padding: 10px;
+    padding: 10px 15px;
     width: 100%;
     height: 120px;
-    background-color: rgb(0, 0, 0);
+    background-color: var(--header-color);
+    /* border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px; */
+
+    & * {
+        color: var(--header-color-font);
+    }
+
+    & .invert {
+        filter: invert(var(--header-invert));
+    }
+
+}
+
+.header input::placeholder {
+    color: var(--header-color-placeholder);
+}
+
+
+.form-box {
+    background-color: var(--bg-form-box);
+
+    & * {
+        color: var(--font-form-box);
+    }
 }
 
 
 
-.img {
-    
-}
 
-.invert {
-    filter: invert();
-}
 
 .header.one-top {
     height: 70px;
@@ -80,11 +238,21 @@ html {
 
 }
 
+.back-table {
+    background-color: var(--back-table-color);
+}
+
+.back-init {
+    background-color: var(--back-table-color);
+}
+
+
+
 .table {
     width: 100%;
     height: 100%;
     /* border-radius: 10px; */
-    background-color: rgb(39, 39, 39);
+    background-color: var(--bg-controls);
     overflow: hidden;
 }
 
@@ -109,7 +277,7 @@ html {
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
-    background-color: rgb(44, 44, 44);    
+    /* background-color: rgb(44, 44, 44);     */
 }
 
 .table-sub-body {
@@ -288,7 +456,7 @@ html {
     cursor: pointer;
 }
 .button:hover {
-    background-color: var(--bg-object-hover);
+    background-color: var(--domain-color);
 }
 
 .search-select {
@@ -353,7 +521,8 @@ html {
 
 
 .db-card:hover {
-    background-color: var(--bg-object-hover);
+    /* background-color: var(--bg-object-hover); */
+    background-color: var(--bg-controls-hover);
 }
 
 .db-card-top {
@@ -376,6 +545,14 @@ html {
     background-size: 40%;
 }
 
+.delete {
+    transition: 0.4s;
+}
+
+.delete:hover {
+    background-color: rgb(148, 1, 1);
+}
+
 .db-card-title {
     display: flex;
     justify-content: center;
@@ -385,38 +562,75 @@ html {
 }
 
 .list-dbs {
-
-    background-color: var(--bg-object);
+    --size-content: 15px;
+    background-color: var(--bg-controls);
     /* background-image: url("/img/gui/bg.jpg"); */
+    /* background-image: url("/img/gui/bg2.jpg"); */
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    width: 100%;
-    height: -webkit-fill-available;
+    width: calc(100% - var(--size-content) * 2);
+    /* height: -webkit-fill-available;  */
+    height: calc(100% - var(--size-content) * (1 + var(--spacing)));
+    margin: var(--size-content);
+    margin-top: calc(var(--size-content) * var(--spacing));
+    overflow: hidden;
+    border-radius: 15px;
     overflow-y: auto;
 }
 
 .body-banner {
     width: 300px;
     height: 100%;
-    background-color: var(--bg-object);
+    background-color: var(--banner-color);
     overflow: hidden;
     /* border-radius: 20px; */
     float: left;
+
+    & * {
+        color: var(--banner-font-color);
+    }
+
+    & .invert {
+        filter: invert(var(--banner-invert));
+    }
 }
 
 .body-banner-button {
     padding: 10px;
+    padding-left: 20px;
     display: flex;
     justify-content: left;
     align-items: center;
     transition: 0.4s;
     cursor: pointer;
+    width: calc(100% - 20px);
+    margin: 5px 0px;
+
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.content2 {
+    --size-content-border-height: 20px;
+    --size-content-border-width: 15px;
+    margin: calc(var(--size-content-border-height) * var(--spacing)) var(--size-content-border-width);
+    /* margin: 0px var(--size-content-border-width); */
+    border-radius: 20px;
+    width: calc(100% - (var(--size-content-border-width) * 2));
+    height: calc(100% - (var(--size-content-border-height) * (1 + var(--spacing)) ));
+    overflow: hidden;
 }
 
 .body-banner-button:hover {
     background-color: var(--domain-color);
 
+}
+
+.body-banner-img {
+    width: 25px;
+    height: 25px;
+    margin-right: 20px;
 }
 
 .body-content {
@@ -425,6 +639,8 @@ html {
     width: calc(100% - 300px);
     overflow-y: auto;
     padding-left: 20px;
+    background-color: var(--body-out-banner-color);
+    border-top-left-radius: 15px;
 }
 
 .content {
@@ -440,6 +656,10 @@ html {
     border-radius: 20px;
     margin-bottom: 6px;
     display: flex;
+}
+
+.back-conf {
+    background-color: var(--bg-out-banner-color);
 }
 
 .conf-box span {
@@ -463,7 +683,7 @@ html {
     /* margin-right: 10px; */
 
     & option {
-        background: rgb(0, 0, 0);
+        background: var(--bg-option);
     }
 }
 
@@ -474,6 +694,23 @@ html {
     border: none;
     background-color: var(--bg-object);
     padding: 10px;
+    transition: 0.4s;
+}
+
+
+.conf-box input[type="button"]:hover {
+    background-color: var(--domain-color);
+
+}
+
+
+.conf-box * {
+    transition: 0.4s;
+}
+
+.conf-box *:hover {
+    background-color: var(--domain-color);
+
 }
 
 
@@ -499,7 +736,7 @@ html {
     height: max-content;
     border-radius: 10px;
     overflow: hidden;
-    background-color: var(--bg-object);
+    background-color: var(--form-table-color);
     margin: 10px;
 
     ._head {
@@ -558,7 +795,7 @@ html {
                 }
 
                 *:disabled {
-                    color: gray;
+                    color: var(--disabled);
                 }
 
                 & select {
@@ -567,8 +804,8 @@ html {
                     color: auto;
 
                     & option {
-                        background: rgb(32, 32, 32);
-                        color: white;
+                        background: var(--bg-option);
+                        background: var(--bg-option);
                     }
                 }
 
@@ -584,8 +821,8 @@ html {
 
     ._floor {
         width: 100%;
-        height: 10px;
-        border-top: solid gray 1px;
+        /* height: 10px; */
+        /* border-top: solid gray 1px; */
     }
 }
 
@@ -611,6 +848,6 @@ select {
 */
 
 .optionbg {
-    color: white;
-    background: rgba(0, 0, 0);
+    color: var(--font-option);
+    background: var(--bg-option);
 }

@@ -9,7 +9,7 @@ class App extends React.Component {
 
 
         return(
-            <div className="marco">
+            <div className="marco form-box">
                 {/* <a href="#" onClick={() => reload()}>reload</a>
                 <br /><br /> */}
                 <div className="medio fill">

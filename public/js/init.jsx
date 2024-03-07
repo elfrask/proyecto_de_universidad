@@ -89,7 +89,7 @@ class App extends React.Component {
                                         
                     
                 </div>
-                <div className="body">
+                <div className="body back-init">
                     <div className="list-dbs">
                         {
                             this.state.dbs.map((x, i)=>{

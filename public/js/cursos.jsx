@@ -103,7 +103,7 @@ class App extends React.Component {
                         }}>
                             agregar curso
                         </ControlButton>
-                        <ControlButton img="/img/gui/delete.svg" click={() => {
+                        <ControlButton img="/img/gui/delete.svg" className="delete" click={() => {
                             if (this.state.curso === "none") {
                                 msg("Debe de seleccionar un curso primero", "Curso no seleccionado");
                                 return false

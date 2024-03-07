@@ -1,4 +1,11 @@
-let remote = require("@electron/remote")
+// let remote = require("@electron/remote")
+
+// window.addEventListener("keydown", (e) => {
+//     // console.log(e.code)
+//     if (e.code === "Enter") {
+//         console.log("login")
+//     }
+// })
 
 
 class App extends React.Component {
@@ -20,6 +27,10 @@ class App extends React.Component {
             if (this.state.curso === "duesonly") {
                 
                 return [...x.dues].includes(0)
+                
+            } else if (this.state.curso === "noduesonly") {
+                
+                return ![...x.dues].includes(0)
                 
             }
 
@@ -99,12 +110,16 @@ class App extends React.Component {
                                 curso
                             })
                         }}>
-                            <option value={this.state.curso} className="select-gui-option optionbg">
+                            <option value={"none"} className="select-gui-option optionbg">
                                 Selecciona un grupo o sección
                             </option>
                             <option value={"duesonly"} className="select-gui-option optionbg">
                                 Solo deudores
                             </option>
+                            <option value={"noduesonly"} className="select-gui-option optionbg">
+                                Solo solventes
+                            </option>
+                            
                             
                             {
                                 test_dates.groups.map(x => {
@@ -131,7 +146,7 @@ class App extends React.Component {
                                     filter
                                 })
                             }}>
-                                <option value={test_dates.dates[0].id} className="select-gui-option">
+                                <option value={test_dates.dates[0].id} className="select-gui-option optionbg">
                                     Filtrar por...
                                 </option>
                                 {
@@ -140,7 +155,7 @@ class App extends React.Component {
                                         if (["curso"].includes(x.id)) return [];
 
                                         return (
-                                            <option value={x.id} className="select-gui-option">
+                                            <option value={x.id} className="select-gui-option optionbg">
                                                 {x.caption}
                                             </option>
                                         )
@@ -153,24 +168,27 @@ class App extends React.Component {
 
 
                 </div>
-                <div className="body" style={{
-                    overflow: "unset"
+                <div className="body back-table" style={{
+                    // overflow: "unset"
                 }}>
-                    <Table
-                        id="principal"
+                    <div className="content2">
 
-                        dates={test_dates.dates}
-                        items={items}
-                        states={test_dates.states}
-                        dbclick={(e) => {
-                            openWin("/student.html", {}, {
-                                id: e.ci,
-                                parent: window
-                            })
-                        }}
-                        
+                        <Table
+                            id="principal"
 
-                    />
+                            dates={test_dates.dates}
+                            items={items}
+                            states={test_dates.states}
+                            dbclick={(e) => {
+                                openWin("/student.html", {}, {
+                                    id: e.ci,
+                                    parent: window
+                                })
+                            }}
+                            
+
+                        />
+                    </div>
                 </div>
 
             </div>
@@ -185,7 +203,10 @@ ReactDOM.render(
     <App />,
     document.body,
     () => {
-        onRender()
+        setTimeout(() => {
+
+            onRender()
+        }, 200)
         console.log("app is started")
 
     }

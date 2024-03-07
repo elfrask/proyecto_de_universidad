@@ -12,8 +12,8 @@ let MyServer = server(configSession.host, configSession.user, configSession.pass
 
 MyServer.connectSync();
 
-function gen_date(caption, id) {
-    return {id: id, caption: caption}
+function gen_date(caption, id, img) {
+    return {id, caption, img}
 }
 
 

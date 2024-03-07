@@ -205,7 +205,7 @@ async function dues_report() {
             let due = "", state = "";
 
             if (_estado === 1) {
-                due = "0";
+                due = "0$";
                 state = "Pagado";
             } else {
                 due = (configs.dues_value - _deuda) + "$";

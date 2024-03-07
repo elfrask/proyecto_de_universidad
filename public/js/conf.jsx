@@ -17,9 +17,9 @@ window.addEventListener("beforeunload", (evento) => {
 
 let data = {
     sections:[
-        gen_date("Sistema de reporte de cuotas", "email"),
-        gen_date("Administrar plantilla", "admin"),
-        gen_date("Cursos y secciones", "cursos"),
+        gen_date("Sistema de reporte de cuotas", "email", "/img/gui/mail.svg"),
+        gen_date("Credenciales y acceso", "admin", "/img/gui/lock.svg"),
+        gen_date("Cursos y secciones", "cursos", "/img/gui/groups.svg"),
     ]
 }
 
@@ -253,7 +253,7 @@ class App extends React.Component {
                                         
                     
                 </div>
-                <div className="body one-top">
+                <div className="body one-top back-conf">
                     <div className="body-banner">
                         {
                             data.sections.map(x=> {
@@ -261,7 +261,7 @@ class App extends React.Component {
                                     <div className="body-banner-button" onClick={() =>  {
                                         document.location.assign("#" + x.id);
                                     }}>
-                                        {x.caption}
+                                        <Img className="invert body-banner-img" img={x.img} /> {x.caption}
                                     </div>
                                 )
                             })
