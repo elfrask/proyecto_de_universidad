@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "electron index.js",
-    "server": "nodemon api_server.js 6626"
+    "server": "nodemon api_server.js 6626",
+    "install": "npm i"
   },
   "keywords": [],
   "author": "",
