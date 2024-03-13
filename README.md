@@ -3,7 +3,7 @@
 </h1>
 <p>
     Bienvenid@s a este repositorio donde conseguirás información sobre el proyecto de 
-    "Sistema de reporte de cuotas via correo electrónico". Antes de iniciar, debemos de tomar en cuenta
+    " Sistema de notificación vía correo (U.E. Colegio Santa Teresita)". Antes de iniciar, debemos de tomar en cuenta
     que hay que tener ciertos elementos en consideración antes de iniciar. 
     <br><br>
     Este proyecto esta totalmente basado en tecnología web. este usa Node.js y Electron.js para su back-end,
