@@ -7,7 +7,8 @@
     "dev": "electron index.js --dev",
     "start": "electron index.js",
     "server": "nodemon api_server.js 6626",
-    "install": "npm i"
+    "install": "npm i",
+    "build":"npx electron-packager . cst-gestor --platform=win32 --arch=x64 --out=dist"
   },
   "keywords": [],
   "author": "",
