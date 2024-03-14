@@ -19,13 +19,18 @@ app.addListener("ready", () => {
         webPreferences:{
             nodeIntegration:true,
             contextIsolation:false,
+            devTools: process.argv.includes("--dev") 
                       
         },
         width: 800,
         height: 800,
         minWidth: 1000,
-        icon:"public/img/gui/cst.png"
+        icon:"public/img/gui/cst.png",
+        
     });
+
+    win.menuBarVisible = false;
+    
 
     server.run(6606, win);
     
