@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "electron index.js --dev",
     "start": "electron index.js",
-    "server": "nodemon api_server.js 6626",
+    "server": "nodemon api_server.js 18081",
     "install": "npm i",
     "build":"npx electron-packager . cst-gestor --platform=win32 --arch=x64 --out=dist"
   },
@@ -31,25 +31,6 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.8",
     "styliner": "^0.8.9"
-  },
-  "dependencies-old": {
-    "@electron/remote": "github:electron/remote",
-    "body-parser": "^1.20.2",
-    "cookie-session": "^2.0.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.2",
-    "electron-prompt": "^1.7.0",
-    "express": "^4.18.2",
-    "express-myconnection": "^1.0.4",
-    "handlebars": "^4.7.8",
-    "lodash": "^4.17.21",
-    "mongodb": "^6.3.0",
-    "mongoose": "^8.1.1",
-    "morgan": "^1.10.0",
-    "mysql": "^2.18.1",
-    "node-cron": "^3.0.3",
-    "nodemailer": "^6.9.8",
-    "styliner": "^1.1.0"
   },
   "extraResources": [
     "./node_modules/@electron/remote/**"

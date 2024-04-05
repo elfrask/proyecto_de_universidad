@@ -1,6 +1,7 @@
 //let electron = require("electron");
 let {BrowserWindow, app} = require("electron");
 let server = require("./server.js");
+require("dotenv").config();
 //let {BrowserWindow, app} = electron;
 
 global.nombre = "carlos"
@@ -32,7 +33,7 @@ app.addListener("ready", () => {
     win.menuBarVisible = false;
     
 
-    server.run(6606, win);
+    server.run(process.env.PORT_APP, win);
     
 
 

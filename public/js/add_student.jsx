@@ -15,7 +15,7 @@ class App extends React.Component {
                 <div className="medio fill">
 
                     <div className="login">
-                        <input type="text" id="ci" placeholder="Cedula del estudiante" className="input" style={{
+                        <input id="ci" type="number" placeholder="Cedula del estudiante" className="input" style={{
                             width:"100%"
                         }}/>
                         <br />
@@ -30,7 +30,7 @@ class App extends React.Component {
 
                                 try {
 
-                                    let result = MyServer.add_student(ci);
+                                    let result = MyServer.add_student(parseInt(ci));
 
 
                                     switch (result.error) {

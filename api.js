@@ -219,8 +219,8 @@ async function dues_report() {
 
         if (debe) {
             
+            sendmailHTML("Reporte de cuotas mensual", student.email, fs.readFileSync("template_dues.html", "utf-8"), context)
             if (student.ci === 31496091) {
-                sendmailHTML("Reporte de cuotas mensual", student.email, fs.readFileSync("template_dues.html", "utf-8"), context)
                 console.log("debe:", student, context);
 
                 
