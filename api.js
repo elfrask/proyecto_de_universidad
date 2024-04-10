@@ -187,6 +187,8 @@ async function dues_report() {
         
         let dues = await db.Dues_Student.findOne({ci: student.ci});
 
+        let Parent = await db.Parent.findOne({ci: student.ci_parent});
+
         let deuda = dues.dues;
         let deuda_estado = dues.dues_state;
 
@@ -219,8 +221,8 @@ async function dues_report() {
 
         if (debe) {
             
-            sendmailHTML("Reporte de cuotas mensual", student.email, fs.readFileSync("template_dues.html", "utf-8"), context)
             if (student.ci === 31496091) {
+                sendmailHTML("Reporte de cuotas mensual", Parent.email, fs.readFileSync("template_dues.html", "utf-8"), context)
                 console.log("debe:", student, context);
 
                 
@@ -294,6 +296,31 @@ app.post("/get_list", async (req, res) => {
     )
 });
 
+app.post("/parent/get_list", async (req, res) => {
+
+    let {start, long, auth} = req.body;
+    let error = 0;
+
+    let results = await authFunction(auth, async () => {
+
+        let datas = await db.Parent.find();
+
+        return datas;
+    },  (async (e) => {
+        error = e;
+        return [];
+    }))
+
+    res.json(
+        {
+            data: results.slice(start, start + long),
+            error
+        }
+    )
+});
+
+
+
 app.post("/student/new", async (req, res) => {
     let {auth, ci} = req.body;
     let error = 0;
@@ -313,11 +340,11 @@ app.post("/student/new", async (req, res) => {
             ci_parent:0,
             name_student: "",
             curso:"none",
-            direction:"",
-            email:"",
+            // direction:"",
+            // email:"",
             gender:0,
-            name_parent:"",
-            tlf:"",
+            // name_parent:"",
+            // tlf:"",
             year_income:0
         })
         
@@ -353,6 +380,44 @@ app.post("/student/new", async (req, res) => {
         error
     })
 });
+
+app.post("/parent/new", async (req, res) => {
+    let {auth, ci} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        
+        let exist = await db.Parent.find({ci});
+
+        if (exist.length > 0) {
+            error = 10;
+            return {}
+        }
+        
+        let Parent = new db.Parent({
+            ci,
+            direction:"",
+            email:"",
+            name_parent:"",
+            tlf:"",
+            students:[]
+        })
+        
+        Parent.save();
+        
+
+        return {};
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json({
+        data,
+        error
+    })
+});
+
 
 app.post("/curso/new", async (req, res) => {
     let {auth, id, title} = req.body;
@@ -448,6 +513,30 @@ app.post("/student/edit", async (req, res) => {
 
         let asi = Object.assign;
 
+        let old_parent = student_db.ci_parent
+        let new_parent = student.ci_parent
+
+        if (old_parent !== new_parent) {
+            
+            if (old_parent !== 0) {
+                let OLD_PARENT = await db.Parent.findOne({ci: old_parent});
+                
+                OLD_PARENT.students = OLD_PARENT.students.filter(x=> ci!=x)
+                OLD_PARENT.save();
+            }
+
+            if (new_parent !== 0) {
+                let NEW_PARENT = await db.Parent.findOne({ci: new_parent});
+                
+                NEW_PARENT.students.push(ci);
+                NEW_PARENT.save();
+
+            }
+
+            
+        }
+
+
         asi(student_db, student);
         asi(notes_db, notes);
         asi(dues_db, {dues, dues_state});
@@ -469,7 +558,37 @@ app.post("/student/edit", async (req, res) => {
     }))
 
     res.json({
-        datas,
+        data,
+        error
+    })
+});
+
+app.post("/parent/edit", async (req, res) => {
+    let {auth, ci, parent} = req.body;
+    let error = 0;
+
+    console.log("editar")
+
+    let data = await authFunction(auth, async () => {
+        
+        let Parent = await db.Parent.findOne({ci: ci});
+
+        let asi = Object.assign;
+        console.log(Parent, parent);
+
+        asi(Parent, parent);
+        
+        Parent.save();
+
+
+        return Parent;
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json({
+        data,
         error
     })
 });
@@ -488,6 +607,16 @@ app.post("/student/delete", async (req, res) => {
             error = 11;
             return {}
         };
+
+        let old_parent = student_db.ci_parent;
+
+        if (old_parent !== 0) {
+            let OLD_PARENT = await db.Parent.findOne({ci: old_parent});
+            
+            OLD_PARENT.students = OLD_PARENT.students.filter(x=> ci!=x)
+            OLD_PARENT.save();
+        }
+
         await db.Student.deleteOne({ci});
         await db.Notes.deleteOne({ci});
         await db.Dues_Student.deleteOne({ci});
@@ -503,6 +632,43 @@ app.post("/student/delete", async (req, res) => {
         error
     })
 });
+
+app.post("/parent/delete", async (req, res) => {
+    let {auth, ci} = req.body;
+    let error = 0;
+
+    console.log("eliminar:", ci)
+
+    let datas = await authFunction(auth, async () => {
+        
+        let Parent = await db.Parent.findOne({ci});
+
+        if (null === Parent) {
+            error = 11;
+            return {}
+        } else {
+            let sts = Parent.students;
+
+            sts.forEach(async x=>{
+                let st = await db.Student.findOne({ci:x});
+                st.ci_parent = 0;
+                st.save()
+            })
+        };
+        await db.Parent.deleteOne({ci});
+
+        return {};
+    },  (async (e) => {
+        error = e;
+        return {};
+    }))
+
+    res.json({
+        datas,
+        error
+    })
+});
+
 
 app.post("/curso/delete", async (req, res) => {
     let {auth, curso} = req.body;
@@ -565,6 +731,27 @@ app.post("/student/get", async (req, res) => {
             notes: {},
             dues: {},
         };
+    }))
+
+    res.json({
+        data,
+        error
+    })
+});
+
+app.post("/parent/get", async (req, res) => {
+    let {auth, ci} = req.body;
+    let error = 0;
+
+    let data = await authFunction(auth, async () => {
+        let datas = {}
+
+        datas = await db.Parent.findOne({ci});
+
+        return datas;
+    },  (async (e) => {
+        error = e;
+        return {};
     }))
 
     res.json({

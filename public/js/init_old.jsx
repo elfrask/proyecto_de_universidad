@@ -161,22 +161,6 @@ class App extends React.Component {
                             })
                         }
                     </div>
-                    <div className="landscape-init">
-                        <div className="welcome-content">
-
-                            {/* <h3>
-                                Bienvenido/a al sistema de gestión de alumnado de la U. E. Colegio Santa Teresita
-                            </h3>
-                            <br /> */}
-                            <div className="welcome">
-                                <div>
-
-                                    Bienvenido/a al sistema de gestión de alumnado de la U. E. Colegio Santa Teresita
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 
             </div>

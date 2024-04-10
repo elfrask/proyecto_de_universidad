@@ -28,6 +28,19 @@ function preventDefaultClose() {
     return result
 }
 
+function titlear(ci) {
+    
+    if (ci === 0) return{ title: "0 - no definido", target:{}}
+
+    let target = MyServer.get_parent(ci);
+
+
+    return {
+        title: `${ci} - ${target.data.name_parent}`,
+        target
+    }
+}
+
 
 let DATAS = MyServer.get_student(subapi.id).data;
 let CURSOS = MyServer.get_cursos().data;
@@ -85,7 +98,10 @@ class App extends React.Component {
                                     case "number":
                                         value = Number(value);
                                         break;
-
+                                    case "int":
+                                        value = parseInt(value);
+                                        break;
+    
                                     case "string":
                                         value = value + "";
                                         break;
@@ -103,13 +119,10 @@ class App extends React.Component {
                             let data_req = {
                                 student: {
                                     name_student: data.name_student,
-                                    email: data.email,
                                     gender: data.gender,
                                     curso: data.curso,
-                                    direction: data.direction,
                                     year_income: data.year_income,
-                                    tlf: data.tlf,
-                                    name_parent: data.name_parent
+                                    ci_parent: data.ci_parent,
 
                                 },
                                 dues: [
@@ -242,19 +255,6 @@ class App extends React.Component {
                                 }
                             />
                             <FieldTable
-                                title="Dirección"
-                                field={
-                                    <input
-                                        type="text"
-                                        idpx="direction"
-                                        name="student"
-                                        placeholder="Dirección"
-                                        defaultValue={DATAS.student.direction}
-                                        disabled={StudentDisabled}
-                                    />
-                                }
-                            />
-                            <FieldTable
                                 title="Año de ingreso"
                                 field={
                                     <input
@@ -319,12 +319,43 @@ class App extends React.Component {
                                 }
                             />
 
+                            <FieldTable
+                                title="Curso/Grupo/Sección"
+                                field={
+                                    <input 
+                                    type="button" 
+                                    defaultValue={titlear(DATAS.student.ci_parent).title} 
+                                    name="student"
+                                    idpx="ci_parent"
+                                    type_value="int"
+                                    onClick={(e) => {
+                                        let target = e.target;
+
+                                        openWin("/parents_list.html", {
+                                            width: "350",
+                                            height: "500px",
+                                        }, {
+                                            id: e.ci,
+                                            parent: window,
+                                            done: (ci, window) => {
+
+                                                target.value = ci;
+
+                                                window.close()
+
+                                            }
+                                        })
+
+                                    }} />
+                                }
+                            />
+
                         </FormularioTablas>
 
 
                         {/* INFORMACIÓN DEL REPRESENTANTE */}
 
-                        <FormularioTablas
+                        {/* <FormularioTablas
                             title="Información del representante"
                         >
                             <FieldTable
@@ -381,7 +412,7 @@ class App extends React.Component {
                                 }
                             />
 
-                        </FormularioTablas>
+                        </FormularioTablas> */}
 
 
                         {/* PAGO DE CUOTAS  */}

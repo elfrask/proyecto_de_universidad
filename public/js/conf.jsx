@@ -140,7 +140,7 @@ class Conf extends React.Component {
                         </span>
                         <input type="button"  value={"Abrir"} onClick={() => {
                             openWin("/account.html", {
-
+                                width:"900"
                             }, {
                                 
                             })

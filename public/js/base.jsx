@@ -653,6 +653,11 @@ class Dbcard extends React.Component {
 
         return(
             <div className="db-card" onDoubleClick={genlink(this.props.click)}>
+                {/* <div className="db-card-top">
+                    <div className="db-card-delete delete" onClick={genlink(this.props.deleteclick)}>
+                        <Img img="/img/gui/delete.svg" size="24px" className="invert" />
+                    </div>
+                </div> */}
                 <div className="db-card-top delete" onClick={genlink(this.props.deleteclick)}>
                     <Img img="/img/gui/delete.svg" size="24px" className="invert" />
                 </div>
@@ -714,6 +719,50 @@ class FieldTable extends React.Component {
     }
 }
 
+class Minitable extends React.Component {
+
+    props = {
+        elements:[],
+        click: (x) => {},
+    }
+
+    state = {
+        search: ""
+    }
+
+    render() {
+
+        let filtro = [...this.props.elements].filter(x=> {
+
+            if (this.state.search === "") {
+                return true
+            };
+
+            // alert("filtra")
+
+            return (x.title+"").toLowerCase().includes(this.state.search.toLowerCase())
+        })
+
+        
+        return(
+            <div className="minitable">
+                <input type="text" placeholder="buscar" className="search-minitable" onChange={(e) => {
+                    this.setState({search: e.target.value});
+                }} />
+                <div className="body-minitable">
+                    {
+                        filtro.map(x=> {
+
+                            return( <div className="row-minitable" onClick={() => this.props.click(x)}>
+                                {x.title}
+                            </div> )
+                        })
+                    }
+                </div>
+            </div>
+        )
+    }
+}
 
 function generate_code(long) {
     
@@ -816,10 +865,41 @@ function server(host, user, pass) {
                 return
             }
         },
+        get_list_parents:(start, long) => {
+            try {
+                
+                return load.post(host + "/parent/get_list", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    start, 
+                    long
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
         get_student:(ci) => {
             try {
                 
                 return load.post(host + "/student/get", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    ci
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        get_parent:(ci) => {
+            try {
+                
+                return load.post(host + "/parent/get", {
                     auth:{
                         user:me.user,
                         pass:me.pass
@@ -892,6 +972,22 @@ function server(host, user, pass) {
                 return
             }
         },
+        edit_parent:(ci, parent) => {
+            try {
+                
+                return load.post(host + "/parent/edit", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    ci,
+                    parent
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
         edit_cursos:(cursos) => {
             try {
                 
@@ -926,6 +1022,21 @@ function server(host, user, pass) {
             try {
                 
                 return load.post(host + "/student/new", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    ci
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        add_parent:(ci) => {
+            try {
+                
+                return load.post(host + "/parent/new", {
                     auth:{
                         user:me.user,
                         pass:me.pass
@@ -987,6 +1098,21 @@ function server(host, user, pass) {
             try {
                 
                 return load.post(host + "/student/delete", {
+                    auth:{
+                        user:me.user,
+                        pass:me.pass
+                    },
+                    ci
+                })
+            } catch (error) {
+                me.on.error(`status error to connect server: `+ 3, 3)
+                return
+            }
+        },
+        delete_parent:(ci) => {
+            try {
+                
+                return load.post(host + "/parent/delete", {
                     auth:{
                         user:me.user,
                         pass:me.pass

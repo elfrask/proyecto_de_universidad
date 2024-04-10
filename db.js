@@ -19,10 +19,10 @@ let Student = new Schema({
     },
     name_student: String,
     curso: String,
-    email: String,
-    direction: String,
-    name_parent: String,
-    tlf: String,
+    // email: String,
+    // direction: String,
+    // name_parent: String,
+    // tlf: String,
     year_income: Number,
     gender: Number,
     dues: {
@@ -30,6 +30,19 @@ let Student = new Schema({
         default: null
     }
 });
+
+let Parent = new Schema({
+    ci,
+    email: String,
+    direction: String,
+    name_parent: String,
+    tlf: String,
+    students: {
+        type: Array,
+        default: []
+    }
+});
+
 
 // el periodo representa el año escolar expresado como el año que dura mas tiempo en el periodo entre septiembre a agosto
 
@@ -78,6 +91,7 @@ let Modelos = {
     Notes: model("notes", Notes),
     Dues_Student: model("dues_student", Dues_Student),
     Cursos: model("curso", Cursos),
+    Parent: model("parent", Parent),
 }
 
 
