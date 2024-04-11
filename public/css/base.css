@@ -898,8 +898,8 @@ html {
     align-items: center;
     
     color: white;
-    background-blend-mode: darken;
-    background-color: #aaa;
+    background-blend-mode: multiply;
+    background-color: #666666;
 
     & div {
         color: white;
